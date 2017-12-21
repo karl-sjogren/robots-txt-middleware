@@ -2,7 +2,7 @@
 A Robots.txt middleware for ASP.NET Core
 
 ## Usage
-```
+```csharp
     app.UseRobotsTxtMiddleware(builder => {
         builder
             .AddSection(section => 
