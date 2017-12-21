@@ -17,7 +17,7 @@ namespace RobotsTxtMiddleware {
         }
 
         public static void UseRobotsTxtMiddleware(this IApplicationBuilder app, RobotsTxtOptions options) {
-            app.UseMiddleware<RobotsTxtMiddleware>();
+            app.UseMiddleware<RobotsTxtMiddleware>(options);
         }
     }
 
@@ -43,7 +43,7 @@ namespace RobotsTxtMiddleware {
         private async Task BuildRobotsTxt(HttpContext context) {
             var sb = _options.Build();
 
-            using(var sw = new StreamWriter(context.Request.Body))
+            using(var sw = new StreamWriter(context.Response.Body))
                 await sw.WriteAsync(sb.ToString());
         }
     }
@@ -86,7 +86,7 @@ namespace RobotsTxtMiddleware {
             }
 
             public SectionBuilder AddComment(string comment) {
-                _section.UserAgents.Add(comment);
+                _section.Comments.Add(comment);
                 return this;
             }
 
@@ -108,23 +108,43 @@ namespace RobotsTxtMiddleware {
     }
 
     public class RobotsTxtOptions {
+        public RobotsTxtOptions() {
+            Sections = new List<RobotsTxtSection>();
+            SitemapUrls = new List<string>();
+        }
+
         public List<RobotsTxtSection> Sections { get; }
         public List<string> SitemapUrls { get; }
 
         internal StringBuilder Build() {
             var builder = new StringBuilder();
 
+            foreach(var section in Sections) {
+                section.Build(builder);
+                builder.AppendLine();
+            }
+
+            foreach(var url in SitemapUrls) {
+                builder.AppendLine("Sitemap: " + url);
+            }
+
             return builder;
         }
     }
 
     public class RobotsTxtSection {
+        public RobotsTxtSection() {
+            Comments = new List<string>();
+            UserAgents = new List<string>();
+            Rules = new List<RobotsTxtRule>();
+        }
+
         public List<string> Comments;
         public List<string> UserAgents;
         public List<RobotsTxtRule> Rules;
 
         public void Build(StringBuilder builder) {
-            if(UserAgents.Any())
+            if(!UserAgents.Any())
                 return;
 
             foreach(var comment in Comments) {

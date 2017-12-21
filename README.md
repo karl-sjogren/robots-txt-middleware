@@ -3,7 +3,7 @@ A Robots.txt middleware for ASP.NET Core
 
 ## Usage
 ```
-    app.UseRobotsTxtMiddleware(builder => {
+    app.UseRobotsTxtMiddleware(builder =>
         builder
             .AddSection(section => 
                 section
@@ -17,6 +17,6 @@ A Robots.txt middleware for ASP.NET Core
                     .AddUserAgent("*")
                     .Disallow("/")
                 )
-            .AddSitemap("sitemap.xml");
-    });
+            .AddSitemap("sitemap.xml")
+    );
 ```
