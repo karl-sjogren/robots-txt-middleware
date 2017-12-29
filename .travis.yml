@@ -2,7 +2,7 @@ language: csharp
 mono: alpha
 sudo: required
 dist: trusty
-dotnet: 2.0.0
+#dotnet: 2.0.0
 addons:
   apt:
     packages:
@@ -14,5 +14,14 @@ addons:
 env:
   - MONO_TLS_PROVIDER=legacy
 install:
-  - dotnet restore
-script: ./build.sh --target=test && ./build.sh --target=pack
+  - curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
+  - sudo mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg
+  - sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-trusty-prod trusty main" > /etc/apt/sources.list.d/dotnetdev.list'
+  - sudo apt-get update
+  - sudo apt-get install dotnet-sdk-2.0.2
+  - export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
+  - export DOTNET_CLI_TELEMETRY_OPTOUT=1
+  - dotnet restore src
+script:
+  - ./build.sh --target=test
+  - ./build.sh --target=pack
