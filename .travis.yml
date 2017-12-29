@@ -2,9 +2,7 @@ language: csharp
 mono: alpha
 sudo: required
 dist: trusty
-dotnet:
-  - 1.0.1
-  - 2.0.0
+dotnet: 2.0.0
 addons:
   apt:
     packages:
