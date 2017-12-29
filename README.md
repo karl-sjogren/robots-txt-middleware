@@ -3,8 +3,10 @@
 A Robots.txt middleware for ASP.NET Core.
 
 ## Usage
+To specify multiple rules with the fluent interface makes it really easy.
+
 ```csharp
-    app.UseRobotsTxtMiddleware(builder =>
+    app.UseRobotsTxt(builder =>
         builder
             .AddSection(section => 
                 section
@@ -16,8 +18,39 @@ A Robots.txt middleware for ASP.NET Core.
                 section
                     .AddComment("Disallow the rest")
                     .AddUserAgent("*")
+                    .AddCrawlDelay(TimeSpan.FromSeconds(10))
                     .Disallow("/")
                 )
-            .AddSitemap("sitemap.xml")
+            .AddSitemap("https://example.com/sitemap.xml")
     );
+```
+
+Output
+
+```
+# Allow Googlebot
+User-agent: Googlebot
+Allow: /
+
+# Disallow the rest
+User-agent: *
+Disallow: /
+Crawl-delay: 10
+
+Sitemap: https://example.com/sitemap.xml
+```
+
+Or if you just want to deny everyone.
+
+```csharp
+    app.UseRobotsTxt(builder =>
+        builder
+            .DenyAll()
+    );
+```
+
+Output
+```
+User-agent: *
+Disallow: /
 ```

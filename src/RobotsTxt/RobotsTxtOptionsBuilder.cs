@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -12,6 +11,14 @@ namespace RobotsTxt {
             _options = new RobotsTxtOptions();
         }
 
+        public RobotsTxtOptionsBuilder DenyAll() {
+            return AddSection(section =>
+                section
+                    .AddUserAgent("*")
+                    .Disallow("/")
+            );
+        }
+
         public RobotsTxtOptionsBuilder AddSection(Func<SectionBuilder, SectionBuilder> builder) {
             var sectionBuilder = new SectionBuilder();
             sectionBuilder = builder(sectionBuilder);
@@ -20,6 +27,9 @@ namespace RobotsTxt {
         }
 
         public RobotsTxtOptionsBuilder AddSitemap(string url) {
+            if(!Uri.TryCreate(url, UriKind.Absolute, out _))
+                throw new ArgumentException("Url must be an absolute url for sitemaps.", nameof(url));
+
             _options.SitemapUrls.Add(url);
             return this;
         }

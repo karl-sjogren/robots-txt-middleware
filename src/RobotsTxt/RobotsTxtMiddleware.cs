@@ -26,8 +26,13 @@ namespace RobotsTxt {
         private async Task BuildRobotsTxt(HttpContext context) {
             var sb = _options.Build();
 
+            var output = sb.ToString();
+
+            if(string.IsNullOrWhiteSpace(output))
+                output = "# This file didn't get any instructions so everyone is allowed";
+
             using(var sw = new StreamWriter(context.Response.Body))
-                await sw.WriteAsync(sb.ToString());
+                await sw.WriteAsync(output);
         }
     }
 }

@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -93,7 +92,7 @@ namespace RobotsTxt {
             : base(RobotsTxtRuleType.CrawlDelay, delay.TotalSeconds.ToString(CultureInfo.InvariantCulture)) { }
 
         public override void Build(StringBuilder builder) {
-            builder.AppendLine("crawl-delay: " + Value);
+            builder.AppendLine("Crawl-delay: " + Value);
         }
     }
 

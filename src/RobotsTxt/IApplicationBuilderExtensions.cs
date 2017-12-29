@@ -5,13 +5,13 @@ using RobotsTxt;
 
 namespace Microsoft.AspNetCore.Builder {
     public static class IApplicationBuilderExtensions {
-        public static void UseRobotsTxtMiddleware(this IApplicationBuilder app, Func<RobotsTxtOptionsBuilder, RobotsTxtOptionsBuilder> builderFunc) {
+        public static void UseRobotsTxt(this IApplicationBuilder app, Func<RobotsTxtOptionsBuilder, RobotsTxtOptionsBuilder> builderFunc) {
             var builder = new RobotsTxtOptionsBuilder();
             var options = builderFunc(builder).Build();
-            app.UseRobotsTxtMiddleware(options);
+            app.UseRobotsTxt(options);
         }
 
-        public static void UseRobotsTxtMiddleware(this IApplicationBuilder app, RobotsTxtOptions options) {
+        public static void UseRobotsTxt(this IApplicationBuilder app, RobotsTxtOptions options) {
             app.UseMiddleware<RobotsTxtMiddleware>(options);
         }
     }

@@ -10,17 +10,12 @@ using Xunit;
 
 namespace RobotsTxt.Tests {
     public class MiddlewareTests {
-        private readonly TestServer _server;
-        private readonly HttpClient _client;
-
-        public MiddlewareTests() {
-            _server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
-            _client = _server.CreateClient();
-        }
-
         [Fact]
         public async Task RobotsTxtShouldRenderOnCorrectPath() {
-            var response = await _client.GetAsync("/robots.txt");
+            var server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
+            var client = server.CreateClient();
+
+            var response = await client.GetAsync("/robots.txt");
             response.EnsureSuccessStatusCode();
 
             var result = await response.Content.ReadAsStringAsync();
@@ -32,21 +27,39 @@ namespace RobotsTxt.Tests {
                 "",
                 "# Disallow the rest",
                 "User-agent: *",
+                "Crawl-delay: 10",
                 "Disallow: /",
                 "",
-                "Sitemap: sitemap.xml",
+                "Sitemap: https://example.com/sitemap.xml",
                 ""
             };
 
             var expected = string.Join(Environment.NewLine, expectedLines);
 
             Assert.Equal(expected, result);
-            // Assert.Equal("# Allow Googlebot\nUser-agent: Googlebot\nAllow: /\n\n# Disallow the rest\nUser-agent: *\nDisallow: /\n\nSitemap: sitemap.xml\n", result);
+        }
+
+
+        [Fact]
+        public async Task RobotsTxtShouldRenderACommentIfEmpty() {
+            var server = new TestServer(new WebHostBuilder().UseStartup<StartupNoConfig>());
+            var client = server.CreateClient();
+
+            var response = await client.GetAsync("/robots.txt");
+            response.EnsureSuccessStatusCode();
+
+            var result = await response.Content.ReadAsStringAsync();
+            var expected = "# This file didn't get any instructions so everyone is allowed";
+
+            Assert.Equal(expected, result);
         }
 
         [Fact]
         public async Task RobotsTxtShouldFallThroughOnInvalidPath() {
-            var response = await _client.GetAsync("/not-robots.txt");
+            var server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
+            var client = server.CreateClient();
+
+            var response = await client.GetAsync("/not-robots.txt");
             
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -54,7 +67,7 @@ namespace RobotsTxt.Tests {
 
     public class Startup {
         public void Configure(IApplicationBuilder app) {
-            app.UseRobotsTxtMiddleware(builder => 
+            app.UseRobotsTxt(builder => 
                 builder
                     .AddSection(section => 
                         section
@@ -66,10 +79,17 @@ namespace RobotsTxt.Tests {
                         section
                             .AddComment("Disallow the rest")
                             .AddUserAgent("*")
+                            .AddCrawlDelay(TimeSpan.FromSeconds(10))
                             .Disallow("/")
                         )
-                    .AddSitemap("sitemap.xml")
+                    .AddSitemap("https://example.com/sitemap.xml")
             );
+        }
+    }
+
+    public class StartupNoConfig {
+        public void Configure(IApplicationBuilder app) {
+            app.UseRobotsTxt(builder => builder);
         }
     }
 }
