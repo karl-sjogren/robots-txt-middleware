@@ -2,10 +2,6 @@ var target = Argument("target", "build");
 var output = Argument("output", "./artifacts");
 var versionSuffix = Argument<string>("versionSuffix", null);
 
-if(versionSuffix == null && TravisCI.IsRunningOnTravisCI) {
-    versionSuffix = "build-" + TravisCI.Build.BuildNumber;
-}
-
 Task("clean")
     .Does(() => {
         CleanDirectories("./src/**/bin/");
