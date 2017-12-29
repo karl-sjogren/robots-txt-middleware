@@ -2,6 +2,9 @@ language: csharp
 mono: alpha
 sudo: required
 dist: trusty
+dotnet:
+  - 1.0.1
+  - 2.0.0
 addons:
   apt:
     packages:
@@ -11,5 +14,7 @@ addons:
     - libssl-dev
     - libunwind8
 env:
-    - MONO_TLS_PROVIDER=legacy
+  - MONO_TLS_PROVIDER=legacy
+install:
+  - dotnet restore
 script: ./build.sh --target=test && ./build.sh --target=pack
