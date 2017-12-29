@@ -14,14 +14,14 @@ Task("clean")
 Task("build")
     .IsDependentOn("clean")
     .Does(() => {
-        DotNetCoreRestore("./src/RobotsTxtMiddleware/RobotsTxtMiddleware.csproj");
+        DotNetCoreRestore("./src/RobotsTxt/RobotsTxt.csproj");
         
         var buildSettings = new DotNetCoreBuildSettings {
             Configuration = "Release",
             VersionSuffix = versionSuffix
         };
 
-        DotNetCoreBuild("./src/RobotsTxtMiddleware/RobotsTxtMiddleware.csproj", buildSettings);
+        DotNetCoreBuild("./src/RobotsTxt/RobotsTxt.csproj", buildSettings);
     });
 
 Task("pack")
@@ -32,15 +32,15 @@ Task("pack")
             VersionSuffix = versionSuffix
         };
 
-        DotNetCorePack("./src/RobotsTxtMiddleware/RobotsTxtMiddleware.csproj", packSettings);
+        DotNetCorePack("./src/RobotsTxt/RobotsTxt.csproj", packSettings);
     });
 
 Task("test")
     .Does(() => {
         var settings = new DotNetCoreTestSettings { };
 
-        DotNetCoreRestore("./tests/RobotsTxtMiddleware.Tests/RobotsTxtMiddleware.Tests.csproj");                
-        DotNetCoreTest("./tests/RobotsTxtMiddleware.Tests/RobotsTxtMiddleware.Tests.csproj", settings);
+        DotNetCoreRestore("./tests/RobotsTxt.Tests/RobotsTxt.Tests.csproj");                
+        DotNetCoreTest("./tests/RobotsTxt.Tests/RobotsTxt.Tests.csproj", settings);
     });
 
 RunTarget(target);

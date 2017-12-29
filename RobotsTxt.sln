@@ -5,11 +5,11 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F0FB1E81-3C38-4B4F-819E-27D258FF2899}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RobotsTxtMiddleware", "src\RobotsTxtMiddleware\RobotsTxtMiddleware.csproj", "{610B25CA-70BD-4433-89D3-FEF56E583477}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RobotsTxt", "src\RobotsTxt\RobotsTxt.csproj", "{610B25CA-70BD-4433-89D3-FEF56E583477}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{962DBC53-02D4-46CD-842D-AFC95CEBA59B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RobotsTxtMiddleware.Tests", "tests\RobotsTxtMiddleware.Tests\RobotsTxtMiddleware.Tests.csproj", "{8F7993B2-2ACB-46D7-BDE7-3845BFC31BCE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RobotsTxt.Tests", "tests\RobotsTxt.Tests\RobotsTxt.Tests.csproj", "{8F7993B2-2ACB-46D7-BDE7-3845BFC31BCE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

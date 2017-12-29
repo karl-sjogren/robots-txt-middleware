@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Xunit;
 
-namespace RobotsTxtMiddleware.Tests {
+namespace RobotsTxt.Tests {
     public class MiddlewareTests {
         private readonly TestServer _server;
         private readonly HttpClient _client;
@@ -25,7 +25,23 @@ namespace RobotsTxtMiddleware.Tests {
 
             var result = await response.Content.ReadAsStringAsync();
 
-            Assert.Equal("# Allow Googlebot\nUser-agent: Googlebot\nAllow: /\n\n# Disallow the rest\nUser-agent: *\nDisallow: /\n\nSitemap: sitemap.xml\n", result);
+            var expectedLines = new[] {
+                "# Allow Googlebot",
+                "User-agent: Googlebot",
+                "Allow: /",
+                "",
+                "# Disallow the rest",
+                "User-agent: *",
+                "Disallow: /",
+                "",
+                "Sitemap: sitemap.xml",
+                ""
+            };
+
+            var expected = string.Join(Environment.NewLine, expectedLines);
+
+            Assert.Equal(expected, result);
+            // Assert.Equal("# Allow Googlebot\nUser-agent: Googlebot\nAllow: /\n\n# Disallow the rest\nUser-agent: *\nDisallow: /\n\nSitemap: sitemap.xml\n", result);
         }
 
         [Fact]
