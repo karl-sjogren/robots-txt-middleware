@@ -16,6 +16,9 @@ namespace RobotsTxt {
 
         public async Task Invoke(HttpContext context) {
             if(context.Request.Path == _robotsTxtPath) {
+                context.Response.ContentType = "text/plain";
+                context.Response.Headers.Add("Cache-Control", $"max-age={_options.MaxAge.TotalSeconds}");
+
                 await BuildRobotsTxt(context);
                 return;
             }

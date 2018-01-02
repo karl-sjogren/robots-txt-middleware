@@ -13,6 +13,7 @@ namespace RobotsTxt {
 
         public List<RobotsTxtSection> Sections { get; }
         public List<string> SitemapUrls { get; }
+        public TimeSpan MaxAge { get; } = TimeSpan.FromDays(1);
 
         internal StringBuilder Build() {
             var builder = new StringBuilder();
