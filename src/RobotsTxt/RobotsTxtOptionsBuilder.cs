@@ -11,11 +11,21 @@ namespace RobotsTxt {
             _options = new RobotsTxtOptions();
         }
 
-        public RobotsTxtOptionsBuilder DenyAll() {
-            return AddSection(section =>
+        public void DenyAll() {
+            _options.Sections.Clear();
+            AddSection(section =>
                 section
                     .AddUserAgent("*")
                     .Disallow("/")
+            );
+        }
+
+        public void AllowAll() {
+            _options.Sections.Clear();
+            AddSection(section =>
+                section
+                    .AddUserAgent("*")
+                    .Disallow(string.Empty)
             );
         }
 

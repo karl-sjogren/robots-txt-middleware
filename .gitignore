@@ -291,3 +291,6 @@ __pycache__/
 # Cake-tools
 tools/*
 !tools/package.config
+
+# OSX
+.DS_Store
