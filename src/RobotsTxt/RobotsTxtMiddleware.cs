@@ -29,7 +29,7 @@ namespace RobotsTxt {
         private async Task BuildRobotsTxt(HttpContext context) {
             var sb = _options.Build();
 
-            var output = sb.ToString();
+            var output = sb.ToString()?.TrimEnd();
 
             if(string.IsNullOrWhiteSpace(output))
                 output = "# This file didn't get any instructions so everyone is allowed";

@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Title>Robots.txt middleware for ASP.Net Core</Title>
     <Description>Robots.txt middleware with fluent interface.</Description>
-    <VersionPrefix>1.0.0</VersionPrefix>
+    <VersionPrefix>1.0.1</VersionPrefix>
     <TargetFrameworks>netstandard2.0;netstandard1.3</TargetFrameworks>
     <AssemblyName>RobotsTxtCore</AssemblyName>
     <Authors>Karl-Johan Sjögren</Authors>

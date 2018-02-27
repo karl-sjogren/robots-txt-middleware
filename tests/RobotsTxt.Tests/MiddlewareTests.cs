@@ -30,8 +30,7 @@ namespace RobotsTxt.Tests {
                 "Crawl-delay: 10",
                 "Disallow: /",
                 "",
-                "Sitemap: https://example.com/sitemap.xml",
-                ""
+                "Sitemap: https://example.com/sitemap.xml"
             };
 
             var expected = string.Join(Environment.NewLine, expectedLines);
@@ -39,6 +38,45 @@ namespace RobotsTxt.Tests {
             Assert.Equal(expected, result);
         }
 
+        [Fact]
+        public async Task RobotsTxtShouldRenderAllowAllCorrectly() {
+            var server = new TestServer(new WebHostBuilder().UseStartup<StartupAllowAll>());
+            var client = server.CreateClient();
+
+            var response = await client.GetAsync("/robots.txt");
+            response.EnsureSuccessStatusCode();
+
+            var result = await response.Content.ReadAsStringAsync();
+
+            var expectedLines = new[] {
+                "User-agent: *",
+                "Disallow:"
+            };
+
+            var expected = string.Join(Environment.NewLine, expectedLines);
+
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public async Task RobotsTxtShouldRenderDenyAllCorrectly() {
+            var server = new TestServer(new WebHostBuilder().UseStartup<StartupDenyAll>());
+            var client = server.CreateClient();
+
+            var response = await client.GetAsync("/robots.txt");
+            response.EnsureSuccessStatusCode();
+
+            var result = await response.Content.ReadAsStringAsync();
+
+            var expectedLines = new[] {
+                "User-agent: *",
+                "Disallow: /"
+            };
+
+            var expected = string.Join(Environment.NewLine, expectedLines);
+
+            Assert.Equal(expected, result);
+        }
 
         [Fact]
         public async Task RobotsTxtShouldRenderACommentIfEmpty() {
@@ -84,6 +122,18 @@ namespace RobotsTxt.Tests {
                         )
                     .AddSitemap("https://example.com/sitemap.xml")
             );
+        }
+    }
+
+    public class StartupAllowAll {
+        public void Configure(IApplicationBuilder app) {
+            app.UseRobotsTxt(builder => builder.AllowAll());
+        }
+    }
+
+    public class StartupDenyAll {
+        public void Configure(IApplicationBuilder app) {
+            app.UseRobotsTxt(builder => builder.DenyAll());
         }
     }
 
