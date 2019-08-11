@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
 
-namespace RobotsTxt {
+namespace RobotsTxt
+{
     public class RobotsTxtOptionsBuilder {
         private readonly RobotsTxtOptions _options;
 

@@ -1,5 +1,5 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
@@ -34,8 +34,8 @@ namespace RobotsTxt {
             if(string.IsNullOrWhiteSpace(output))
                 output = "# This file didn't get any instructions so everyone is allowed";
 
-            using(var sw = new StreamWriter(context.Response.Body))
-                await sw.WriteAsync(output);
+            var buffer = Encoding.UTF8.GetBytes(output);
+            await context.Response.Body.WriteAsync(buffer, 0, buffer.Length);
         }
     }
 }
