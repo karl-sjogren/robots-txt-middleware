@@ -1,4 +1,4 @@
-# RobotsTxtMiddleware [![Build Status](https://travis-ci.org/karl-sjogren/robots-txt-middleware.svg?branch=master)](https://travis-ci.org/karl-sjogren/robots-txt-middleware)
+# RobotsTxtMiddleware [![Build Status](https://travis-ci.com/karl-sjogren/robots-txt-middleware.svg?branch=master)](https://travis-ci.com/karl-sjogren/robots-txt-middleware)
 
 A Robots.txt middleware for ASP.NET Core. Why is this needed you ask? Because if you need to add dynamic values (such as a configured url from your CMS) you'll need some sort of code to handle that, and this makes it easy.
 
