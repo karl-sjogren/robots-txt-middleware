@@ -3,7 +3,7 @@ language: csharp
 mono: none
 sudo: required
 env:
-  - SNAP_CHANNEL=""       TEST_FRAMEWORK="netcoreapp2.0" DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true DOTNET_CLI_TELEMETRY_OPTOUT=true
+  # - SNAP_CHANNEL=""       TEST_FRAMEWORK="netcoreapp2.0" DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true DOTNET_CLI_TELEMETRY_OPTOUT=true
   - SNAP_CHANNEL="--beta" TEST_FRAMEWORK="netcoreapp3.0" DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true DOTNET_CLI_TELEMETRY_OPTOUT=true
 install:
   - sudo snap install dotnet-sdk $SNAP_CHANNEL --classic
