@@ -2,18 +2,11 @@ dist: xenial
 language: csharp
 mono: none
 sudo: required
-addons:
-  snaps:
-    - name: dotnet-sdk
-      confinement: classic
-      channel: latest/beta # Currently 3.0 Preview
-    - name: dotnet-sdk
-      confinement: classic
-      channel: latest/stable # Currently 2.2
 env:
-  - DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true
-  - DOTNET_CLI_TELEMETRY_OPTOUT=true
+  - SDK_VERSION="" DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true DOTNET_CLI_TELEMETRY_OPTOUT=true
+  - SDK_VERSION="--beta" DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true DOTNET_CLI_TELEMETRY_OPTOUT=true
 install:
+  - sudo snap install dotnet-sdk $SDK_VERSION --classic
   - dotnet tool install -g Cake.Tool 
   - dotnet restore
 script:
