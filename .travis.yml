@@ -8,7 +8,8 @@ env:
 install:
   - sudo snap install dotnet-sdk $SDK_VERSION --classic
   - sudo snap alias dotnet-sdk.dotnet dotnet
-  - dotnet tool install Cake.Tool
+  - dotnet tool install -g Cake.Tool
+  - export PATH="$PATH:~/.dotnet/tools"
 script:
   - dotnet cake --target=test
   - dotnet cake --target=pack
