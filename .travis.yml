@@ -9,6 +9,5 @@ install:
   - sudo snap install dotnet-sdk $SNAP_CHANNEL --classic
   - sudo snap alias dotnet-sdk.dotnet dotnet
 script:
-  - dotnet test --framework=netcoreapp3.0
-  - dotnet test --framework=netcoreapp2.0
+  - dotnet test --framework=$TEST_FRAMEWORK
   - dotnet pack
