@@ -12,9 +12,9 @@ before_install:
 install:
   - sudo snap install dotnet-sdk_2 --classic
   - sudo snap install dotnet-sdk_3 --beta --classic
-  - sudo snap alias dotnet-sdk_2.dotnet dotnet2
-  - sudo snap alias dotnet-sdk_3.dotnet dotnet3
 script:
-  - dotnet2 test --framework=netcoreapp2.0
-  - dotnet3 test --framework=netcoreapp3.0
-  - dotnet3 pack
+  - sudo snap alias dotnet-sdk_2.dotnet dotnet
+  - dotnet test --framework=netcoreapp2.0
+  - sudo snap alias dotnet-sdk_3.dotnet dotnet
+  - dotnet test --framework=netcoreapp3.0
+  - dotnet pack
