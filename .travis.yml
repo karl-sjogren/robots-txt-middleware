@@ -1,8 +1,8 @@
+#dist: trusty
+dist: xenial
 language: csharp
-mono: alpha
+mono: none
 sudo: required
-dist: trusty
-#dotnet: 2.0.0
 addons:
   apt:
     packages:
@@ -11,18 +11,22 @@ addons:
     - libicu-dev
     - libssl-dev
     - libunwind8
+   snaps:
+       - name: dotnet-sdk
+         confinement: classic
+         channel: latest/beta
 env:
-  - MONO_TLS_PROVIDER=legacy
+  - DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true
+  - DOTNET_CLI_TELEMETRY_OPTOUT=true
 install:
   - curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
   - sudo mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg
   - sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-trusty-prod trusty main" > /etc/apt/sources.list.d/dotnetdev.list'
   - sudo apt-get update
-  - sudo apt-get install dotnet-sdk-2.0.2
-  - sudo apt-get install dotnet-dev-1.0.4
-  - export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true
-  - export DOTNET_CLI_TELEMETRY_OPTOUT=true
+  - sudo apt-get install dotnet-sdk-2.2.100
+  - sudo apt-get install dotnet-dev-1.1.9
+  - dotnet tool install -g Cake.Tool 
   - dotnet restore
 script:
-  - ./build.sh --target=test
-  - ./build.sh --target=pack
+  - dotnet cake --target=test
+  - dotnet cake --target=pack
