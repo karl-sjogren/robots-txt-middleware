@@ -7,8 +7,8 @@ env:
   - SDK_VERSION="--beta" DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true DOTNET_CLI_TELEMETRY_OPTOUT=true
 install:
   - sudo snap install dotnet-sdk $SDK_VERSION --classic
-  - dotnet tool install -g Cake.Tool 
-  - dotnet restore
+  - sudo snap alias dotnet-sdk.dotnet dotnet
+  - dotnet tool install -g Cake.Tool
 script:
   - dotnet cake --target=test
   - dotnet cake --target=pack
