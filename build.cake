@@ -1,5 +1,6 @@
 var target = Argument("target", "build");
 var output = Argument("output", "./artifacts");
+var framework = Argument("framework", "");
 var versionSuffix = Argument<string>("versionSuffix", null);
 
 Task("clean")
@@ -18,7 +19,8 @@ Task("build")
         
         var buildSettings = new DotNetCoreBuildSettings {
             Configuration = "Release",
-            VersionSuffix = versionSuffix
+            VersionSuffix = versionSuffix,
+			Framework = framework
         };
 
         DotNetCoreBuild("./src/RobotsTxt/RobotsTxt.csproj", buildSettings);
@@ -37,7 +39,9 @@ Task("pack")
 
 Task("test")
     .Does(() => {
-        var settings = new DotNetCoreTestSettings { };
+        var settings = new DotNetCoreTestSettings {
+			Framework = framework
+		};
 
         DotNetCoreRestore("./tests/RobotsTxt.Tests/RobotsTxt.Tests.csproj");                
         DotNetCoreTest("./tests/RobotsTxt.Tests/RobotsTxt.Tests.csproj", settings);

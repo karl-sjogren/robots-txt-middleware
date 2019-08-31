@@ -11,5 +11,6 @@ install:
   - dotnet tool install -g Cake.Tool
   - export PATH="$PATH:~/.dotnet/tools"
 script:
-  - dotnet cake --target=test
+  - dotnet cake --target=test --framework=netcoreapp3.0
+  - dotnet cake --target=test --framework=netcoreapp2.0
   - dotnet cake --target=pack
