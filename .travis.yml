@@ -4,6 +4,8 @@ mono: none
 sudo: required
 env:
   - DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true DOTNET_CLI_TELEMETRY_OPTOUT=true
+before_install:
+  - snap set system experimental.parallel-instances=true
 install:
   - sudo snap install dotnet-sdk_2 --classic
   - sudo snap install dotnet-sdk_3 --beta --classic
