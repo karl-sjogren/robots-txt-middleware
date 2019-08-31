@@ -8,9 +8,7 @@ env:
 install:
   - sudo snap install dotnet-sdk $SDK_VERSION --classic
   - sudo snap alias dotnet-sdk.dotnet dotnet
-  - dotnet tool install -g Cake.Tool
-  - export PATH="$PATH:~/.dotnet/tools"
 script:
-  - dotnet cake --target=test --framework=netcoreapp3.0
-  - dotnet cake --target=test --framework=netcoreapp2.0
-  - dotnet cake --target=pack
+  - dotnet test --framework=netcoreapp3.0
+  - dotnet test --framework=netcoreapp2.0
+  - dotnet pack
