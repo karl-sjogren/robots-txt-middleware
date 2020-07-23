@@ -25,6 +25,11 @@ namespace RobotsTxt.Tests {
                 "User-agent: Googlebot",
                 "Allow: /",
                 "",
+                "# Allow Yandex",
+                "User-agent: Yandex",
+                "Allow: /",
+                "Host: https://example.com",
+                "",
                 "# Disallow the rest",
                 "User-agent: *",
                 "Crawl-delay: 10",
@@ -113,6 +118,13 @@ namespace RobotsTxt.Tests {
                             .AddUserAgent("Googlebot")
                             .Allow("/")
                         )
+                    .AddSection(section => 
+                        section
+                            .AddComment("Allow Yandex")
+                            .AddUserAgent("Yandex")
+                            .Allow("/")
+                            .AddHost("https://example.com")
+                    )
                     .AddSection(section => 
                         section
                             .AddComment("Disallow the rest")

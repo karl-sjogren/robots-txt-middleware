@@ -79,6 +79,14 @@ namespace RobotsTxt
                 _section.Rules.Add(new RobotsTxtDisallowRule(path));
                 return this;
             }
+            
+            public SectionBuilder AddHost(string host) {
+                if(!Uri.TryCreate(host, UriKind.Absolute, out _))
+                    throw new ArgumentException("Host must be an absolute url.", nameof(host));
+                
+                _section.Rules.Add(new RobotsTxtHostRule(host));
+                return this;
+            }
         }
     }
 }
