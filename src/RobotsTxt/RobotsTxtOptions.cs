@@ -96,10 +96,19 @@ namespace RobotsTxt {
             builder.AppendLine("Crawl-delay: " + Value);
         }
     }
+    
+    public class RobotsTxtHostRule : RobotsTxtRule {
+        public RobotsTxtHostRule(string host) : base(RobotsTxtRuleType.Host, host) { }
+
+        public override void Build(StringBuilder builder) {
+            builder.AppendLine("Host: " + Value);
+        }
+    }
 
     public enum RobotsTxtRuleType {
         Allow,
         Disallow,
-        CrawlDelay
+        CrawlDelay,
+        Host
     }
 }
