@@ -1,4 +1,4 @@
-# RobotsTxtMiddleware [![Build Status](https://travis-ci.com/karl-sjogren/robots-txt-middleware.svg?branch=master)](https://travis-ci.com/karl-sjogren/robots-txt-middleware)
+# RobotsTxtMiddleware [![NuGet Badge](https://buildstats.info/nuget/RobotsTxtCore)](https://www.nuget.org/packages/RobotsTxtCore/)
 
 > From version 2.0 I've dropped support for .NET Core versions prior to 3.1 and made a
 huge breaking change by adding a `IRobotsTxtProvider` interface seperate from the
