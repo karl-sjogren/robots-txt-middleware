@@ -294,3 +294,6 @@ tools/*
 
 # OSX
 .DS_Store
+
+# BenchmarkDotNet
+BenchmarkDotNet.Artifacts

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 
 namespace RobotsTxt {
@@ -24,7 +23,9 @@ namespace RobotsTxt {
             }
 
             foreach(var url in SitemapUrls) {
-                builder.AppendLine("Sitemap: " + url);
+                builder
+                    .Append("Sitemap: ")
+                    .AppendLine(url);
             }
 
             return builder;
@@ -43,15 +44,19 @@ namespace RobotsTxt {
         public List<RobotsTxtRule> Rules;
 
         public void Build(StringBuilder builder) {
-            if(!UserAgents.Any())
+            if(UserAgents.Count == 0)
                 return;
 
             foreach(var comment in Comments) {
-                builder.AppendLine("# " + comment);
+                builder
+                    .Append("# ")
+                    .AppendLine(comment);
             }
 
             foreach(var userAgent in UserAgents) {
-                builder.AppendLine("User-agent: " + userAgent);
+                builder
+                    .Append("User-agent: ")
+                    .AppendLine(userAgent);
             }
 
             foreach(var rule in Rules) {
@@ -76,7 +81,9 @@ namespace RobotsTxt {
         public RobotsTxtAllowRule(string path) : base(RobotsTxtRuleType.Allow, path) { }
 
         public override void Build(StringBuilder builder) {
-            builder.AppendLine("Allow: " + Value);
+            builder
+                .Append("Allow: ")
+                .AppendLine(Value);
         }
     }
 
@@ -84,7 +91,9 @@ namespace RobotsTxt {
         public RobotsTxtDisallowRule(string path) : base(RobotsTxtRuleType.Disallow, path) { }
 
         public override void Build(StringBuilder builder) {
-            builder.AppendLine("Disallow: " + Value);
+            builder
+                .Append("Disallow: ")
+                .AppendLine(Value);
         }
     }
 
@@ -93,7 +102,9 @@ namespace RobotsTxt {
             : base(RobotsTxtRuleType.CrawlDelay, delay.TotalSeconds.ToString(CultureInfo.InvariantCulture)) { }
 
         public override void Build(StringBuilder builder) {
-            builder.AppendLine("Crawl-delay: " + Value);
+            builder
+                .Append("Crawl-delay: ")
+                .AppendLine(Value);
         }
     }
 

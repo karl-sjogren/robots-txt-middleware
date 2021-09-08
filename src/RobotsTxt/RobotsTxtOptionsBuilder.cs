@@ -1,11 +1,10 @@
 using System;
 
-namespace RobotsTxt
-{
+namespace RobotsTxt {
     public class RobotsTxtOptionsBuilder {
         private readonly RobotsTxtOptions _options;
 
-        internal RobotsTxtOptionsBuilder() {
+        public RobotsTxtOptionsBuilder() {
             _options = new RobotsTxtOptions();
         }
 
@@ -47,36 +46,34 @@ namespace RobotsTxt
         }
 
         public class SectionBuilder {
-            private readonly RobotsTxtSection _section;
-
-            internal RobotsTxtSection Section => _section;
+            internal RobotsTxtSection Section { get; }
 
             internal SectionBuilder() {
-                _section = new RobotsTxtSection();
+                Section = new RobotsTxtSection();
             }
 
             public SectionBuilder AddUserAgent(string userAgent) {
-                _section.UserAgents.Add(userAgent);
+                Section.UserAgents.Add(userAgent);
                 return this;
             }
 
             public SectionBuilder AddComment(string comment) {
-                _section.Comments.Add(comment);
+                Section.Comments.Add(comment);
                 return this;
             }
 
             public SectionBuilder AddCrawlDelay(TimeSpan delay) {
-                _section.Rules.Add(new RobotsTxtCrawlDelayRule(delay));
+                Section.Rules.Add(new RobotsTxtCrawlDelayRule(delay));
                 return this;
             }
 
             public SectionBuilder Allow(string path) {
-                _section.Rules.Add(new RobotsTxtAllowRule(path));
+                Section.Rules.Add(new RobotsTxtAllowRule(path));
                 return this;
             }
 
             public SectionBuilder Disallow(string path) {
-                _section.Rules.Add(new RobotsTxtDisallowRule(path));
+                Section.Rules.Add(new RobotsTxtDisallowRule(path));
                 return this;
             }
         }

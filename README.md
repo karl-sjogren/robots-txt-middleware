@@ -1,34 +1,42 @@
 # RobotsTxtMiddleware [![Build Status](https://travis-ci.com/karl-sjogren/robots-txt-middleware.svg?branch=master)](https://travis-ci.com/karl-sjogren/robots-txt-middleware)
 
-A Robots.txt middleware for ASP.NET Core. Why is this needed you ask? Because if you need to add dynamic values (such as a configured url from your CMS) you'll need some sort of code to handle that, and this makes it easy.
+> From version 2.0 I've dropped support for .NET Core versions prior to 3.1 and made a
+huge breaking change by adding a `IRobotsTxtProvider` interface seperate from the
+middleware to handle configuration.
+
+A Robots.txt middleware for ASP.NET Core. Why is this needed you ask? Because if you
+need to add dynamic values (such as a configured url from your CMS) you'll need some
+sort of code to handle that, and this makes it easy.
 
 ## Installation
 
 ### NuGet
-```
+
+```powershell
 PM> Install-Package RobotsTxtCore
 ```
 
 ### .Net CLI
-```
+
+```sh
 > dotnet add package RobotsTxtCore
 ```
 
-https://www.nuget.org/packages/RobotsTxtCore/
-
 ## Usage
+
 To specify multiple rules with the fluent interface makes it really easy.
 
 ```csharp
-    app.UseRobotsTxt(builder =>
+public void ConfigureServices(IServiceCollection services) {
+    services.AddStaticRobotsTxt(builder =>
         builder
-            .AddSection(section => 
+            .AddSection(section =>
                 section
                     .AddComment("Allow Googlebot")
                     .AddUserAgent("Googlebot")
                     .Allow("/")
                 )
-            .AddSection(section => 
+            .AddSection(section =>
                 section
                     .AddComment("Disallow the rest")
                     .AddUserAgent("*")
@@ -37,11 +45,16 @@ To specify multiple rules with the fluent interface makes it really easy.
                 )
             .AddSitemap("https://example.com/sitemap.xml")
     );
+}
+
+public void Configure(IApplicationBuilder app) {
+    app.UseRobotsTxt();
+}
 ```
 
 Output
 
-```
+```robots
 # Allow Googlebot
 User-agent: Googlebot
 Allow: /
@@ -57,14 +70,21 @@ Sitemap: https://example.com/sitemap.xml
 Or if you just want to deny everyone.
 
 ```csharp
-    app.UseRobotsTxt(builder =>
+public void ConfigureServices(IServiceCollection services) {
+    services.AddStaticRobotsTxt(builder =>
         builder
             .DenyAll()
     );
+}
+
+public void Configure(IApplicationBuilder app) {
+    app.UseRobotsTxt();
+}
 ```
 
 Output
-```
+
+```robots
 User-agent: *
 Disallow: /
 ```

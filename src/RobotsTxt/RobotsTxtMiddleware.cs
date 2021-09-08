@@ -1,41 +1,29 @@
-﻿using System.IO;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using RobotsTxt.Contracts;
 
 namespace RobotsTxt {
     public class RobotsTxtMiddleware {
-        private static readonly PathString _robotsTxtPath = new PathString("/robots.txt");
-        private readonly RobotsTxtOptions _options;
+        private static readonly PathString _robotsTxtPath = new("/robots.txt");
         private readonly RequestDelegate _next;
 
-        public RobotsTxtMiddleware(RequestDelegate next, RobotsTxtOptions options) {
+        public RobotsTxtMiddleware(RequestDelegate next) {
             _next = next;
-            _options = options;
         }
 
-        public async Task Invoke(HttpContext context) {
+        public async Task InvokeAsync(HttpContext context, IRobotsTxtProvider robotsTxtProvider) {
             if(context.Request.Path == _robotsTxtPath) {
+                var maxAge = await robotsTxtProvider.GetMaxAgeAsync(context.RequestAborted);
                 context.Response.ContentType = "text/plain";
-                context.Response.Headers.Add("Cache-Control", $"max-age={_options.MaxAge.TotalSeconds}");
+                context.Response.Headers.Add("Cache-Control", $"max-age={maxAge.TotalSeconds}");
 
-                await BuildRobotsTxt(context);
+                var buffer = await robotsTxtProvider.GetRobotsTxtAsync(context.RequestAborted);
+                await context.Response.Body.WriteAsync(buffer, context.RequestAborted);
+
                 return;
             }
 
             await _next.Invoke(context);
-        }
-
-        private async Task BuildRobotsTxt(HttpContext context) {
-            var sb = _options.Build();
-
-            var output = sb.ToString()?.TrimEnd();
-
-            if(string.IsNullOrWhiteSpace(output))
-                output = "# This file didn't get any instructions so everyone is allowed";
-
-            var buffer = Encoding.UTF8.GetBytes(output);
-            await context.Response.Body.WriteAsync(buffer, 0, buffer.Length);
         }
     }
 }
