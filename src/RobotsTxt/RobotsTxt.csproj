@@ -7,7 +7,7 @@
     <AssemblyName>RobotsTxtCore</AssemblyName>
     <Authors>Karl-Johan Sjögren</Authors>
     <PackageProjectUrl>https://github.com/karl-sjogren/robots-txt-middleware</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/karl-sjogren/robots-txt-middleware/blob/master/LICENSE</PackageLicenseUrl>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageId>RobotsTxtCore</PackageId>
     <IncludeSymbols>true</IncludeSymbols>
     <LangVersion>latest</LangVersion>
