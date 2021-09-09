@@ -88,3 +88,38 @@ Output
 User-agent: *
 Disallow: /
 ```
+
+## IRobotsTxtProvider
+
+`IRobotsTxtProvider` allows for dynamicly configuring the Robots.txt output depending
+on your case. It could be used to read from config, to check a database setting or
+perhaps which environment your application is currently running in.
+
+```csharp
+public class CoolRobotsTxtProvider : IRobotsTxtProvider {
+    private readonly CoolContext _context;
+
+    public CoolRobotsTxtProvider(CoolContext context) {
+        _context = context;
+    }
+
+    public async Task<Memory<byte>> GetRobotsTxtAsync(CancellationToken cancellationToken) {
+        var settings = await _context.Settings.FirstAsync();
+
+        var builder = new RobotsTxtOptionsBuilder();
+
+        string content;
+        if(settings.RobotsTxt.AllowAll)
+            content = builder.AllowAll().Build().ToString();
+        else
+            content = builder.DenyAll().Build().ToString();
+
+        return Encoding.UTF8.GetBytes(content).AsMemory();
+    }
+
+    public async Task<TimeSpan> GetMaxAgeAsync(CancellationToken cancellationToken) {
+        var settings = await _context.Settings.FirstAsync();
+        return settings.RobotsTxt.MaxAge;
+    }
+}
+```

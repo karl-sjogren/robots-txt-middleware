@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace RobotsTxt.Contracts {
     public interface IRobotsTxtProvider {
-        ValueTask<Memory<byte>> GetRobotsTxtAsync(CancellationToken cancellationToken);
-        ValueTask<TimeSpan> GetMaxAgeAsync(CancellationToken cancellationToken);
+        Task<Memory<byte>> GetRobotsTxtAsync(CancellationToken cancellationToken);
+        Task<TimeSpan> GetMaxAgeAsync(CancellationToken cancellationToken);
     }
 }

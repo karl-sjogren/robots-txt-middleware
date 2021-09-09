@@ -7,7 +7,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Configs;
+using BenchmarkDotNet.Diagnosers;
+using BenchmarkDotNet.Diagnostics.Windows.Configs;
 using BenchmarkDotNet.Engines;
+using BenchmarkDotNet.Environments;
+using BenchmarkDotNet.Exporters;
 using BenchmarkDotNet.Jobs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
@@ -18,7 +22,6 @@ using RobotsTxt.Services;
 #endif
 
 namespace RobotsTxt.Benchmarks {
-    [MemoryDiagnoser]
     [Config(typeof(Config))]
     public class Benchmarks {
         private readonly RobotsTxtOptionsBuilder _optionsBuilder;
@@ -68,30 +71,27 @@ namespace RobotsTxt.Benchmarks {
         }
 
         private static RobotsTxtOptionsBuilder GetNewOptionsBuilder() {
-#if V1
-            return (RobotsTxtOptionsBuilder)typeof(RobotsTxtOptionsBuilder).GetConstructor(
-                  BindingFlags.NonPublic | BindingFlags.Instance,
-                  null, Type.EmptyTypes, null).Invoke(null);
-#endif
-
 #if V2
             return new RobotsTxtOptionsBuilder();
 #else
-            return null;
+            return (RobotsTxtOptionsBuilder)typeof(RobotsTxtOptionsBuilder).GetConstructor(
+                  BindingFlags.NonPublic | BindingFlags.Instance,
+                  null, Type.EmptyTypes, null).Invoke(null);
 #endif
         }
 
         [Benchmark]
         public async Task StaticRobotsTxtProviderAsync() {
-            var httpContext = new DefaultHttpContext();
-
+            for(var i = 0; i < 1000; i++) {
+                var httpContext = new SimpleHttpContext();
 #if V1
-            await _middleware.Invoke(httpContext);
+                await _middleware.Invoke(httpContext);
 #endif
 
 #if V2
-            await _middleware.InvokeAsync(httpContext, _provider);
+                await _middleware.InvokeAsync(httpContext, _provider);
 #endif
+            }
         }
 
         public static Task RequestDelegateAsync(HttpContext context) {
@@ -100,10 +100,14 @@ namespace RobotsTxt.Benchmarks {
 
         private class Config : ManualConfig {
             public Config() {
-                var baseJob = Job.MediumRun.WithStrategy(RunStrategy.Throughput);
+                var baseJob = Job.Default;
 
+                AddJob(baseJob.WithNuGet("RobotsTxtCore", "2.0.0-preview2").WithId("2.0.0-preview2").WithCustomBuildConfiguration("V2"));
                 AddJob(baseJob.WithNuGet("RobotsTxtCore", "2.0.0-preview1").WithId("2.0.0-preview1").WithCustomBuildConfiguration("V2"));
                 AddJob(baseJob.WithNuGet("RobotsTxtCore", "1.1.0").WithId("1.1.0").WithCustomBuildConfiguration("V1"));
+
+                AddDiagnoser(MemoryDiagnoser.Default);
+                AddExporter(MarkdownExporter.GitHub);
             }
         }
     }

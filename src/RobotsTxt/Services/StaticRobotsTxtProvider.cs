@@ -20,12 +20,12 @@ namespace RobotsTxt.Services {
             _maxAge = options.MaxAge;
         }
 
-        public ValueTask<Memory<byte>> GetRobotsTxtAsync(CancellationToken cancellationToken) {
-            return new ValueTask<Memory<byte>>(_content);
+        public Task<Memory<byte>> GetRobotsTxtAsync(CancellationToken cancellationToken) {
+            return Task.FromResult(_content);
         }
 
-        public ValueTask<TimeSpan> GetMaxAgeAsync(CancellationToken cancellationToken) {
-            return new ValueTask<TimeSpan>(_maxAge);
+        public Task<TimeSpan> GetMaxAgeAsync(CancellationToken cancellationToken) {
+            return Task.FromResult(_maxAge);
         }
     }
 }
