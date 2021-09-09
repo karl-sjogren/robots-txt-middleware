@@ -1,10 +1,9 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
-using RobotsTxt;
 using RobotsTxt.Contracts;
 using RobotsTxt.Services;
 
-namespace Microsoft.AspNetCore.Builder {
+namespace RobotsTxt {
     public static class IServiceCollectionExtensions {
         public static void AddStaticRobotsTxt(this IServiceCollection services, Func<RobotsTxtOptionsBuilder, RobotsTxtOptionsBuilder> builderFunc) {
             var builder = new RobotsTxtOptionsBuilder();
