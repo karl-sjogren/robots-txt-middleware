@@ -2,6 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <OutputType>Exe</OutputType>
+	<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -15,11 +16,23 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\RobotsTxt\RobotsTxt.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.13.1" />
     <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.13.1" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'V1'">
+    <DefineConstants>V1</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(Configuration)' != 'V2'">
+    <PackageReference Include="RobotsTxtCore" Version="1.1.0" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'V2'">
+    <DefineConstants>V2</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(Configuration)' == 'V2'">
+    <PackageReference Include="RobotsTxtCore" Version="2.0.0-preview1" />
   </ItemGroup>
 </Project>
