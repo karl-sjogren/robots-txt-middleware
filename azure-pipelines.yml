@@ -7,10 +7,19 @@ trigger:
     include:
     - '*'
 
+strategy:
+  matrix:
+    linux:
+      imageName: 'ubuntu-latest'
+    mac:
+      imageName: 'macOS-latest'
+    windows:
+      imageName: 'windows-latest'
+
 jobs:
 - job: Build
   pool:
-    vmImage: 'windows-latest'
+    vmImage: $(imageName)
   steps:
   - task: UseDotNet@2
     displayName: 'Install .NET Core 3.1'
