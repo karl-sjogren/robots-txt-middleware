@@ -297,3 +297,6 @@ tools/*
 
 # BenchmarkDotNet
 BenchmarkDotNet.Artifacts
+
+# Coverlet output
+*.cobertura.xml
