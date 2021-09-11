@@ -16,6 +16,13 @@ namespace RobotsTxt.Tests {
         }
 
         [Fact]
+        public void ShouldNotThrowOnValidSitemapUrl() {
+            var builder = new RobotsTxtOptionsBuilder();
+
+            Should.NotThrow(() => builder.AddSitemap("https://example.com/sitemap.xml"));
+        }
+
+        [Fact]
         public void ShouldClearPreviousSectionsWhenCallingAllowAll() {
             var builder = new RobotsTxtOptionsBuilder();
 
