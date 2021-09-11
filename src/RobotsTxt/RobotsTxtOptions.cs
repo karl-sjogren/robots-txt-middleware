@@ -66,11 +66,9 @@ namespace RobotsTxt {
     }
 
     public abstract class RobotsTxtRule {
-        public RobotsTxtRuleType Type { get; }
         public string Value { get; }
 
-        protected RobotsTxtRule(RobotsTxtRuleType type, string value) {
-            Type = type;
+        protected RobotsTxtRule(string value) {
             Value = value;
         }
 
@@ -78,7 +76,7 @@ namespace RobotsTxt {
     }
 
     public class RobotsTxtAllowRule : RobotsTxtRule {
-        public RobotsTxtAllowRule(string path) : base(RobotsTxtRuleType.Allow, path) { }
+        public RobotsTxtAllowRule(string path) : base(path) { }
 
         public override void Build(StringBuilder builder) {
             builder
@@ -88,7 +86,7 @@ namespace RobotsTxt {
     }
 
     public class RobotsTxtDisallowRule : RobotsTxtRule {
-        public RobotsTxtDisallowRule(string path) : base(RobotsTxtRuleType.Disallow, path) { }
+        public RobotsTxtDisallowRule(string path) : base(path) { }
 
         public override void Build(StringBuilder builder) {
             builder
@@ -99,18 +97,12 @@ namespace RobotsTxt {
 
     public class RobotsTxtCrawlDelayRule : RobotsTxtRule {
         public RobotsTxtCrawlDelayRule(TimeSpan delay)
-            : base(RobotsTxtRuleType.CrawlDelay, delay.TotalSeconds.ToString(CultureInfo.InvariantCulture)) { }
+            : base(delay.TotalSeconds.ToString(CultureInfo.InvariantCulture)) { }
 
         public override void Build(StringBuilder builder) {
             builder
                 .Append("Crawl-delay: ")
                 .AppendLine(Value);
         }
-    }
-
-    public enum RobotsTxtRuleType {
-        Allow,
-        Disallow,
-        CrawlDelay
     }
 }
