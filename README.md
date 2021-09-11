@@ -10,16 +10,16 @@ sort of code to handle that, and this makes it easy.
 
 ## Installation
 
-### NuGet
-
-```powershell
-PM> Install-Package RobotsTxtCore
-```
-
 ### .Net CLI
 
 ```sh
 > dotnet add package RobotsTxtCore
+```
+
+### NuGet
+
+```powershell
+PM> Install-Package RobotsTxtCore
 ```
 
 ## Usage
@@ -103,23 +103,19 @@ public class CoolRobotsTxtProvider : IRobotsTxtProvider {
         _context = context;
     }
 
-    public async Task<Memory<byte>> GetRobotsTxtAsync(CancellationToken cancellationToken) {
+    public Task<RobotsTxtResult> GetResultAsync(CancellationToken cancellationToken) {
         var settings = await _context.Settings.FirstAsync();
 
         var builder = new RobotsTxtOptionsBuilder();
-
         string content;
+
         if(settings.RobotsTxt.AllowAll)
             content = builder.AllowAll().Build().ToString();
         else
             content = builder.DenyAll().Build().ToString();
 
-        return Encoding.UTF8.GetBytes(content).AsMemory();
-    }
-
-    public async Task<TimeSpan> GetMaxAgeAsync(CancellationToken cancellationToken) {
-        var settings = await _context.Settings.FirstAsync();
-        return settings.RobotsTxt.MaxAge;
+        var buffer = Encoding.UTF8.GetBytes(content).AsMemory();
+        return new RobotsTxtResult(buffer, settings.RobotsTxt.MaxAge);
     }
 }
 ```

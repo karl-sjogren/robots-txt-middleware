@@ -1,7 +1,5 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
-using RobotsTxt.Contracts;
-using RobotsTxt.Services;
 
 namespace RobotsTxt {
     public static class IServiceCollectionExtensions {

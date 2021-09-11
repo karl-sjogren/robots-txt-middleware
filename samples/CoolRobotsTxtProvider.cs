@@ -13,7 +13,7 @@ namespace Samples {
             _context = context;
         }
 
-        public async Task<Memory<byte>> GetRobotsTxtAsync(CancellationToken cancellationToken) {
+        public Task<RobotsTxtResult> GetResultAsync(CancellationToken cancellationToken) {
             var settings = await _context.Settings.FirstAsync();
 
             var builder = new RobotsTxtOptionsBuilder();
@@ -24,12 +24,8 @@ namespace Samples {
             else
                 content = builder.DenyAll().Build().ToString();
 
-            return Encoding.UTF8.GetBytes(content).AsMemory();
-        }
-
-        public async Task<TimeSpan> GetMaxAgeAsync(CancellationToken cancellationToken) {
-            var settings = await _context.Settings.FirstAsync();
-            return settings.RobotsTxt.MaxAge;
+            var buffer = Encoding.UTF8.GetBytes(content).AsMemory();
+            return new RobotsTxtResult(buffer, settings.RobotsTxt.MaxAge);
         }
     }
 }

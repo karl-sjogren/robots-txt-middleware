@@ -2,12 +2,11 @@ using System;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using RobotsTxt.Contracts;
 
-namespace RobotsTxt.Services {
+namespace RobotsTxt {
     public class StaticRobotsTxtProvider : IRobotsTxtProvider {
         private readonly Memory<byte> _content;
-        private readonly TimeSpan _maxAge;
+        private readonly Int32 _maxAge;
 
         public StaticRobotsTxtProvider(RobotsTxtOptions options) {
             var content = options.Build().ToString()?.TrimEnd();
@@ -17,15 +16,12 @@ namespace RobotsTxt.Services {
 
             _content = Encoding.UTF8.GetBytes(content).AsMemory();
 
-            _maxAge = options.MaxAge;
+            _maxAge = Convert.ToInt32(options.MaxAge.TotalSeconds);
         }
 
-        public Task<Memory<byte>> GetRobotsTxtAsync(CancellationToken cancellationToken) {
-            return Task.FromResult(_content);
-        }
-
-        public Task<TimeSpan> GetMaxAgeAsync(CancellationToken cancellationToken) {
-            return Task.FromResult(_maxAge);
+        public Task<RobotsTxtResult> GetResultAsync(CancellationToken cancellationToken) {
+            var result = new RobotsTxtResult(_content, _maxAge);
+            return Task.FromResult(result);
         }
     }
 }

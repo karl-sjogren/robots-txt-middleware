@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using RobotsTxt.Contracts;
 
 namespace RobotsTxt {
     public class RobotsTxtMiddleware {
@@ -13,12 +12,12 @@ namespace RobotsTxt {
 
         public async Task InvokeAsync(HttpContext context, IRobotsTxtProvider robotsTxtProvider) {
             if(context.Request.Path == _robotsTxtPath) {
-                var maxAge = await robotsTxtProvider.GetMaxAgeAsync(context.RequestAborted);
-                context.Response.ContentType = "text/plain";
-                context.Response.Headers.Add("Cache-Control", $"max-age={maxAge.TotalSeconds}");
+                var result = await robotsTxtProvider.GetResultAsync(context.RequestAborted);
 
-                var buffer = await robotsTxtProvider.GetRobotsTxtAsync(context.RequestAborted);
-                await context.Response.Body.WriteAsync(buffer, context.RequestAborted);
+                context.Response.ContentType = "text/plain";
+                context.Response.Headers.Add("Cache-Control", $"max-age={result.MaxAge}");
+
+                await context.Response.Body.WriteAsync(result.Content, context.RequestAborted);
 
                 return;
             }

@@ -1,0 +1,37 @@
+variables:
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+  DOTNET_NOLOGO: 1
+
+trigger:
+  branches:
+    include:
+    - '*'
+
+jobs:
+- job: Build
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+  - task: UseDotNet@2
+    displayName: 'Install .NET Core'
+    inputs:
+      packageType: 'sdk'
+      version: '6.0.100-preview.7.21379.14'
+  - task: DotNetCoreCLI@2
+    displayName: 'Restore NuGet packages'
+    inputs:
+      command: 'restore'
+      projects: '$(Build.SourcesDirectory)/RobotsTxt.sln'
+      verbosityRestore: 'Minimal'
+  - task: DotNetCoreCLI@2
+    displayName: 'Run tests'
+    inputs:
+      command: 'test'
+      projects: '**/*.Tests.csproj'
+      arguments: '--configuration Release /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
+      publishTestResults: true
+  - task: PublishCodeCoverageResults@1
+    displayName: 'Publish Code Coverage Report'
+    inputs:
+      codeCoverageTool: 'Cobertura'
+      summaryFileLocation: '$(Build.SourcesDirectory)/**/coverage.cobertura.xml'
