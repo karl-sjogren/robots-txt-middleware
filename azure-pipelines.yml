@@ -10,7 +10,7 @@ trigger:
 jobs:
 - job: Build
   pool:
-    vmImage: 'ubuntu-latest'
+    vmImage: 'windows-latest'
   steps:
   - task: UseDotNet@2
     displayName: 'Install .NET Core 3.1'
