@@ -34,8 +34,12 @@ namespace RobotsTxt {
         }
 
         public RobotsTxtOptionsBuilder AddSitemap(string url) {
-            if(!Uri.TryCreate(url, UriKind.Absolute, out _))
-                throw new ArgumentException("Url must be an absolute url for sitemaps.", nameof(url));
+            // Note: on Linux/macOS, "/path" URLs are treated as valid absolute file URLs.
+            // To ensure relative urls are correctly rejected on these platforms,
+            // an additional check using IsWellFormedOriginalString() is made here.
+            // See https://github.com/dotnet/corefx/issues/22098 for more information.
+            if(!Uri.TryCreate(url, UriKind.Absolute, out var uri) || !uri.IsWellFormedOriginalString())
+                throw new ArgumentException("Url must be an absolute url to the sitemap.", nameof(url));
 
             _options.SitemapUrls.Add(url);
             return this;
