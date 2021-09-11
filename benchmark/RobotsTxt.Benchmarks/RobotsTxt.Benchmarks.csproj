@@ -24,7 +24,7 @@
     <DefineConstants>V1</DefineConstants>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(Configuration)' != 'V2'">
+  <ItemGroup Condition="'$(Configuration)' != 'V2' And '$(Configuration)' != 'V2P3'">
     <PackageReference Include="RobotsTxtCore" Version="1.1.0" />
   </ItemGroup>
 
@@ -32,7 +32,15 @@
     <DefineConstants>V2</DefineConstants>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)' == 'V2P3'">
+    <DefineConstants>V2;V2P3</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup Condition="'$(Configuration)' == 'V2'">
     <PackageReference Include="RobotsTxtCore" Version="2.0.0-preview1" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)' == 'V2P3'">
+    <PackageReference Include="RobotsTxtCore" Version="2.0.0-preview3" />
   </ItemGroup>
 </Project>

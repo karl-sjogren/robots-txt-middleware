@@ -14,9 +14,8 @@ using BenchmarkDotNet.Environments;
 using BenchmarkDotNet.Exporters;
 using BenchmarkDotNet.Jobs;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
 using RobotsTxt;
-#if V2
+#if V2 && !V2P3
 using RobotsTxt.Contracts;
 using RobotsTxt.Services;
 #endif
@@ -35,6 +34,7 @@ namespace RobotsTxt.Benchmarks {
         private readonly RobotsTxtMiddleware _middleware;
         private readonly IRobotsTxtProvider _provider;
 #endif
+
         public Benchmarks() {
             _optionsBuilder = GetNewOptionsBuilder()
                 .AddSection(section =>
@@ -102,6 +102,7 @@ namespace RobotsTxt.Benchmarks {
             public Config() {
                 var baseJob = Job.Default;
 
+                AddJob(baseJob.WithNuGet("RobotsTxtCore", "2.0.0-preview3").WithId("2.0.0-preview3").WithCustomBuildConfiguration("V2P3"));
                 AddJob(baseJob.WithNuGet("RobotsTxtCore", "2.0.0-preview2").WithId("2.0.0-preview2").WithCustomBuildConfiguration("V2"));
                 AddJob(baseJob.WithNuGet("RobotsTxtCore", "2.0.0-preview1").WithId("2.0.0-preview1").WithCustomBuildConfiguration("V2"));
                 AddJob(baseJob.WithNuGet("RobotsTxtCore", "1.1.0").WithId("1.1.0").WithCustomBuildConfiguration("V1"));
