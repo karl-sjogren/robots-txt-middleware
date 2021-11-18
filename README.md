@@ -18,7 +18,7 @@ sort of code to handle that, and this makes it easy.
 PM> Install-Package RobotsTxtCore
 ```
 
-## Changse from 1.0 to 2.0
+## Changes from 1.0 to 2.0
 
 The first version of this package was only a middleware and had to be configured in
 the `Configure` method in the `Startup` class. This felt fine at the time but as more
