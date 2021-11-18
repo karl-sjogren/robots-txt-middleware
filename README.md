@@ -29,7 +29,7 @@ So I've made a breaking change and made the middleware consume a `IRobotsTxtProv
 which in turn takes care of configuration. There is a default provider for static uses
 (i.e. exactly what the old one did) but doing it this way also let me optimize it quite
 a lot. A quick benchmark shows that running a thousand requests against `/robots.txt`
-is now dine in 25% of the time while also lowering allocations about the same.
+is now done in 25% of the time while also lowering allocations about the same.
 
 | NuGetReferences              |       Mean |    Error |   StdDev |    Gen 0 |  Gen 1 | Allocated |
 |----------------------------- |-----------:|---------:|---------:|---------:|-------:|----------:|
