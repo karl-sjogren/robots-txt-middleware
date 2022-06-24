@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmark", "benchmark", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RobotsTxt.Benchmarks", "benchmark\RobotsTxt.Benchmarks\RobotsTxt.Benchmarks.csproj", "{9B93B6F8-B310-4BC2-85BD-8F67818E958F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RobotsTxt.Samples", "samples\RobotsTxt.Samples.csproj", "{921048AE-506E-4738-A671-3FBCCD0394F9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,6 +66,18 @@ Global
 		{9B93B6F8-B310-4BC2-85BD-8F67818E958F}.Release|x64.Build.0 = Release|Any CPU
 		{9B93B6F8-B310-4BC2-85BD-8F67818E958F}.Release|x86.ActiveCfg = Release|Any CPU
 		{9B93B6F8-B310-4BC2-85BD-8F67818E958F}.Release|x86.Build.0 = Release|Any CPU
+		{921048AE-506E-4738-A671-3FBCCD0394F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{921048AE-506E-4738-A671-3FBCCD0394F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{921048AE-506E-4738-A671-3FBCCD0394F9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{921048AE-506E-4738-A671-3FBCCD0394F9}.Debug|x64.Build.0 = Debug|Any CPU
+		{921048AE-506E-4738-A671-3FBCCD0394F9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{921048AE-506E-4738-A671-3FBCCD0394F9}.Debug|x86.Build.0 = Debug|Any CPU
+		{921048AE-506E-4738-A671-3FBCCD0394F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{921048AE-506E-4738-A671-3FBCCD0394F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{921048AE-506E-4738-A671-3FBCCD0394F9}.Release|x64.ActiveCfg = Release|Any CPU
+		{921048AE-506E-4738-A671-3FBCCD0394F9}.Release|x64.Build.0 = Release|Any CPU
+		{921048AE-506E-4738-A671-3FBCCD0394F9}.Release|x86.ActiveCfg = Release|Any CPU
+		{921048AE-506E-4738-A671-3FBCCD0394F9}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{610B25CA-70BD-4433-89D3-FEF56E583477} = {F0FB1E81-3C38-4B4F-819E-27D258FF2899}

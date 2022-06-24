@@ -14,7 +14,7 @@ namespace RobotsTxt {
         public List<string> SitemapUrls { get; }
         public TimeSpan MaxAge { get; } = TimeSpan.FromDays(1);
 
-        internal StringBuilder Build() {
+        internal StringBuilder GenerateFileContents() {
             var builder = new StringBuilder();
 
             foreach(var section in Sections) {
@@ -29,6 +29,10 @@ namespace RobotsTxt {
             }
 
             return builder;
+        }
+
+        public override string ToString() {
+            return GenerateFileContents().ToString();
         }
     }
 

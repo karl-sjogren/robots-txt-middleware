@@ -126,19 +126,20 @@ public class CoolRobotsTxtProvider : IRobotsTxtProvider {
         _context = context;
     }
 
-    public Task<RobotsTxtResult> GetResultAsync(CancellationToken cancellationToken) {
+    public async Task<RobotsTxtResult> GetResultAsync(CancellationToken cancellationToken) {
         var settings = await _context.Settings.FirstAsync();
 
         var builder = new RobotsTxtOptionsBuilder();
-        string content;
 
-        if(settings.RobotsTxt.AllowAll)
-            content = builder.AllowAll().Build().ToString();
+        RobotsTxtOptions options;
+        if(settings.AllowAllRobots)
+            options = builder.AllowAll().Build();
         else
-            content = builder.DenyAll().Build().ToString();
+            options = builder.DenyAll().Build();
 
+        var content = options.ToString();
         var buffer = Encoding.UTF8.GetBytes(content).AsMemory();
-        return new RobotsTxtResult(buffer, settings.RobotsTxt.MaxAge);
+        return new RobotsTxtResult(buffer, settings.RobotsTxtMaxAge);
     }
 }
 ```
