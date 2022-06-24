@@ -1,5 +1,5 @@
 {
   "scripts": {
-    "pack-release": "dotnet pack ./src/RobotsTxt/RobotsTxt.csproj -o artifacts/ -c Release"
+    "pack-release": "dotnet pack -o artifacts/ -c Release"
   }
 }
