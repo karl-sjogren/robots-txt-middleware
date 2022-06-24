@@ -102,6 +102,7 @@ namespace RobotsTxt.Benchmarks {
             public Config() {
                 var baseJob = Job.Default;
 
+                AddJob(baseJob.WithNuGet("RobotsTxtCore", "2.1.0").WithId("2.1.0").WithCustomBuildConfiguration("V21"));
                 AddJob(baseJob.WithNuGet("RobotsTxtCore", "2.0.0-preview3").WithId("2.0.0-preview3").WithCustomBuildConfiguration("V2P3"));
                 AddJob(baseJob.WithNuGet("RobotsTxtCore", "2.0.0-preview2").WithId("2.0.0-preview2").WithCustomBuildConfiguration("V2"));
                 AddJob(baseJob.WithNuGet("RobotsTxtCore", "2.0.0-preview1").WithId("2.0.0-preview1").WithCustomBuildConfiguration("V2"));
