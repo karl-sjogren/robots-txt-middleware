@@ -9,7 +9,7 @@ namespace RobotsTxt {
         private readonly Int32 _maxAge;
 
         public StaticRobotsTxtProvider(RobotsTxtOptions options) {
-            var content = options.GenerateFileContents().ToString()?.TrimEnd();
+            var content = options.ToString();
 
             if(string.IsNullOrWhiteSpace(content))
                 content = "# This file didn't get any instructions so everyone is allowed";

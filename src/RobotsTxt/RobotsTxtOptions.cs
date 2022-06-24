@@ -32,7 +32,7 @@ namespace RobotsTxt {
         }
 
         public override string ToString() {
-            return GenerateFileContents().ToString();
+            return GenerateFileContents().ToString()?.TrimEnd();
         }
     }
 

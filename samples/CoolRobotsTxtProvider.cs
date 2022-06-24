@@ -33,7 +33,7 @@ public class CoolRobotsTxtProvider : IRobotsTxtProvider {
 /// Fake dbcontext to get the sample provider to compile
 /// </summary>
 public class CoolContext {
-    public CoolDbSet Settings { get; set; }
+    public CoolDbSet Settings => new();
 }
 
 public class CoolDbSet {
