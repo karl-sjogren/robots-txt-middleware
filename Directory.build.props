@@ -3,8 +3,6 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 	  <DisableImplicitNamespaceImports>true</DisableImplicitNamespaceImports>
     <LangVersion>latest</LangVersion>
-    <PathMap Condition="'$(Configuration)' == 'Release' AND '$(OS)' == 'Windows_NT'">$(SolutionDir)=/x/</PathMap>
-    <PathMap Condition="'$(Configuration)' == 'Release' AND $([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))">$(SolutionDir)=X:\</PathMap>
   </PropertyGroup>
 
   <ItemGroup>
