@@ -5,7 +5,6 @@
     <LangVersion>latest</LangVersion>
     <PathMap Condition="'$(Configuration)' == 'Release' AND '$(OS)' == 'Windows_NT'">$(SolutionDir)=/x/</PathMap>
     <PathMap Condition="'$(Configuration)' == 'Release' AND $([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))">$(SolutionDir)=X:\</PathMap>
-    <PathMap Condition="'$(Configuration)' == 'Release' AND $([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))">$(SolutionDir)=/x/</PathMap>
   </PropertyGroup>
 
   <ItemGroup>
