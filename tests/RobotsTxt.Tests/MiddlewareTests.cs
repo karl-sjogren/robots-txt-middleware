@@ -23,6 +23,7 @@ namespace RobotsTxt.Tests {
                 "# Allow Googlebot",
                 "User-agent: Googlebot",
                 "Allow: /",
+                "Request-rate: 1/10",
                 "",
                 "# Disallow the rest",
                 "User-agent: *",
@@ -111,6 +112,7 @@ namespace RobotsTxt.Tests {
                             .AddComment("Allow Googlebot")
                             .AddUserAgent("Googlebot")
                             .Allow("/")
+                            .AddCustomDirective("Request-rate", "1/10")
                         )
                     .AddSection(section =>
                         section

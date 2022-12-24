@@ -109,4 +109,20 @@ namespace RobotsTxt {
                 .AppendLine(Value);
         }
     }
+
+    public class RobotsTxtCrawlCustomRule : RobotsTxtRule {
+        private readonly string _directive;
+
+        public RobotsTxtCrawlCustomRule(string directive, string value)
+            : base(value) {
+            _directive = directive;
+        }
+
+        public override void Build(StringBuilder builder) {
+            builder
+                .Append(_directive)
+                .Append(": ")
+                .AppendLine(Value);
+        }
+    }
 }

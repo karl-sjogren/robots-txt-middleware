@@ -71,6 +71,11 @@ namespace RobotsTxt {
                 return this;
             }
 
+            public SectionBuilder AddCustomDirective(string directive, string value) {
+                Section.Rules.Add(new RobotsTxtCrawlCustomRule(directive, value));
+                return this;
+            }
+
             public SectionBuilder Allow(string path) {
                 Section.Rules.Add(new RobotsTxtAllowRule(path));
                 return this;
