@@ -5,8 +5,21 @@ namespace RobotsTxt;
 public class RobotsTxtOptionsBuilder {
     private readonly RobotsTxtOptions _options;
 
-    public RobotsTxtOptionsBuilder() {
-        _options = new RobotsTxtOptions();
+    public RobotsTxtOptionsBuilder(RobotsTxtOptions options = null) {
+        _options = options ?? new RobotsTxtOptions();
+    }
+
+    public RobotsTxtOptionsBuilder ForEnvironment(string environment) {
+        if(string.IsNullOrWhiteSpace(environment))
+            throw new ArgumentException("Environment must not be null or whitespace.", nameof(environment));
+
+        _options.Environment = environment;
+        return this;
+    }
+
+    public RobotsTxtOptionsBuilder WithMageAge(TimeSpan maxAge) {
+        _options.MaxAge = maxAge;
+        return this;
     }
 
     public RobotsTxtOptionsBuilder DenyAll() {

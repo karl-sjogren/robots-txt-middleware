@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
 
 namespace RobotsTxt;
 
@@ -9,15 +12,25 @@ public class StaticRobotsTxtProvider : IRobotsTxtProvider {
     private readonly Memory<byte> _content;
     private readonly Int32 _maxAge;
 
-    public StaticRobotsTxtProvider(RobotsTxtOptions options) {
-        var content = options.ToString();
+    public StaticRobotsTxtProvider(IEnumerable<RobotsTxtOptions> optionsEnumerable, IHostEnvironment hostingEnvironment) {
+        var options = optionsEnumerable.ToArray();
+        var robotsOptions = options.FirstOrDefault(o => hostingEnvironment.IsEnvironment(o.Environment));
+
+        if(robotsOptions is null) {
+            robotsOptions = options.FirstOrDefault(o => string.IsNullOrWhiteSpace(o.Environment));
+
+            if(robotsOptions == null)
+                throw new InvalidOperationException($"No RobotsTxtOptions matching environment \"{hostingEnvironment.EnvironmentName}\" or any environment found.");
+        }
+
+        var content = robotsOptions.ToString();
 
         if(string.IsNullOrWhiteSpace(content))
             content = "# This file didn't get any instructions so everyone is allowed";
 
         _content = Encoding.UTF8.GetBytes(content).AsMemory();
 
-        _maxAge = Convert.ToInt32(options.MaxAge.TotalSeconds);
+        _maxAge = Convert.ToInt32(robotsOptions.MaxAge.TotalSeconds);
     }
 
     public Task<RobotsTxtResult> GetResultAsync(CancellationToken cancellationToken) {

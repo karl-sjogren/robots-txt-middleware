@@ -11,9 +11,10 @@ public class RobotsTxtOptions {
         SitemapUrls = new List<string>();
     }
 
+    public string Environment { get; internal set; }
     public List<RobotsTxtSection> Sections { get; }
     public List<string> SitemapUrls { get; }
-    public TimeSpan MaxAge { get; } = TimeSpan.FromDays(1);
+    public TimeSpan MaxAge { get; internal set; } = TimeSpan.FromDays(1);
 
     internal StringBuilder GenerateFileContents() {
         var builder = new StringBuilder();

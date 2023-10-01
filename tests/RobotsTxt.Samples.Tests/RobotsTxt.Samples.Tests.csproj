@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <ProjectReference Include="..\..\src\RobotsTxt\RobotsTxt.csproj" />
-    <ProjectReference Include="..\..\samples\RobotsTxt.Samples.csproj" />
+    <ProjectReference Include="..\..\samples\sample-provider\RobotsTxt.Samples.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0' ">

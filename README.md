@@ -112,6 +112,34 @@ User-agent: *
 Disallow: /
 ```
 
+Since version 3.0 you can call AddStaticRobotsTxt multiple times and specify different
+settings for different environments. If there is a matching envrionment it will be used,
+otherwise it will fall back to any configuration without an environment specified.
+
+```csharp
+public void ConfigureServices(IServiceCollection services) {
+    services.AddStaticRobotsTxt(builder =>
+        builder
+            .ForEnvironment("Production")
+            .AddSection(section =>
+                section
+                    .AddComment("Allow Googlebot")
+                    .AddUserAgent("Googlebot")
+                    .Allow("/")
+                )
+    );
+
+    services.AddStaticRobotsTxt(builder =>
+        builder
+            .DenyAll()
+    );
+}
+
+public void Configure(IApplicationBuilder app) {
+    app.UseRobotsTxt();
+}
+```
+
 ## IRobotsTxtProvider
 
 `IRobotsTxtProvider` allows for dynamicly configuring the Robots.txt output depending

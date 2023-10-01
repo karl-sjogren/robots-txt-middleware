@@ -19,6 +19,23 @@ public class RobotsTxtOptionsBuilderTests {
         Should.NotThrow(() => builder.AddSitemap("https://example.com/sitemap.xml"));
     }
 
+    [Theory]
+    [InlineData("\t")]
+    [InlineData("")]
+    [InlineData(null)]
+    public void ShouldThrowOnInvalidEnvironment(string environment) {
+        var builder = new RobotsTxtOptionsBuilder();
+
+        Should.Throw<ArgumentException>(() => builder.ForEnvironment(environment));
+    }
+
+    [Fact]
+    public void ShouldNotThrowOnInvalidEnvironment() {
+        var builder = new RobotsTxtOptionsBuilder();
+
+        Should.NotThrow(() => builder.ForEnvironment("Production"));
+    }
+
     [Fact]
     public void ShouldClearPreviousSectionsWhenCallingAllowAll() {
         var builder = new RobotsTxtOptionsBuilder();

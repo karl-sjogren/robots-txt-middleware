@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace RobotsTxt;
 
@@ -8,6 +9,8 @@ public static class IServiceCollectionExtensions {
         var builder = new RobotsTxtOptionsBuilder();
         var options = builderFunc(builder).Build();
 
-        services.AddSingleton<IRobotsTxtProvider>(new StaticRobotsTxtProvider(options));
+        services.AddSingleton(options);
+
+        services.TryAddSingleton<IRobotsTxtProvider, StaticRobotsTxtProvider>();
     }
 }
