@@ -40,11 +40,6 @@ jobs:
           windows-latest,
           macos-latest
         ]
-        netVersion: [
-          6.0.x,
-          7.0.x,
-          8.0.x
-        ]
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -56,14 +51,14 @@ jobs:
       if: matrix.os == 'windows-latest'
       with:
         path: ${{ github.workspace }}/.nuget/packages
-        key: ${{ runner.os }}-nuget-net${{ matrix.os }}-${{ hashFiles('**/*.csproj', '**/*.Build.props') }}
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/*.Build.props') }}
         restore-keys: |
           ${{ runner.os }}-nuget-
 
-    - name: Install .NET ${{ matrix.netVersion }}
+    - name: Install .NET 8.0
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: ${{ matrix.netVersion }}
+        dotnet-version: 8.0
         dotnet-quality: ga
 
     - name: Restore NuGet packages
@@ -74,7 +69,7 @@ jobs:
 
     - name: Upload test results
       uses: actions/upload-artifact@v3
-      if: matrix.os == 'ubuntu-latest' && matrix.netVersion == '7.0.x'
+      if: matrix.os == 'ubuntu-latest'
       with:
         name: net-test-results
         path: |
@@ -124,11 +119,10 @@ jobs:
         search_artifacts: true
         if_no_artifact_found: ignore
 
-    - name: Install .NET 7
+    - name: Install .NET 8
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 7.0.x
-        dotnet-quality: ga
+        dotnet-version: 8.0.x
 
     - name: Generate coverage report
       uses: danielpalme/ReportGenerator-GitHub-Action@5
@@ -176,11 +170,10 @@ jobs:
     - name: Checkout sources
       uses: actions/checkout@v4
 
-    - name: Install .NET 7
+    - name: Install .NET 8
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 7.0.x
-        dotnet-quality: ga
+        dotnet-version: 8.0.x
 
     - name: Restore NuGet packages
       run: dotnet restore --verbosity minimal
@@ -207,11 +200,10 @@ jobs:
         name: packages
         path: ./artifacts/
 
-    - name: Install .NET 7
+    - name: Install .NET 8
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 7.0.x
-        dotnet-quality: ga
+        dotnet-version: 8.0.x
 
     - name: Publish package to NuGet.org
       env:
