@@ -55,7 +55,7 @@ jobs:
       if: matrix.os == 'windows-latest'
       with:
         path: ${{ github.workspace }}/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/*.Build.props') }}
+        key: ${{ runner.os }}-nuget-net${{ matrix.os }}-${{ hashFiles('**/*.csproj', '**/*.Build.props') }}
         restore-keys: |
           ${{ runner.os }}-nuget-
 
@@ -73,12 +73,12 @@ jobs:
 
     - name: Upload test results
       uses: actions/upload-artifact@v3
-      if: matrix.os == 'ubuntu-latest'
+      if: matrix.os == 'ubuntu-latest' && matrix.netVersion == '7.0.x'
       with:
         name: net-test-results
         path: |
           ./**/*.trx
-          ./**/coverage.cobertura.xml
+          ./**/coverage.*.cobertura.xml
 
   test-and-coverage-results:
     name: Publish test and coverage results
@@ -132,7 +132,7 @@ jobs:
     - name: Generate coverage report
       uses: danielpalme/ReportGenerator-GitHub-Action@5
       with:
-        reports: '../**/{coverage.cobertura,cobertura-coverage}.xml'
+        reports: '../**/{coverage.*.cobertura,cobertura-coverage}.xml'
         targetdir: 'coverage-report'
         historydir: 'coverage-history'
         reporttypes: 'Html;MarkdownSummary;MarkdownDeltaSummary;Cobertura'
