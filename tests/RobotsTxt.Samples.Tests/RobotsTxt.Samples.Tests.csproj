@@ -1,14 +1,14 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <ProjectReference Include="..\..\src\RobotsTxt\RobotsTxt.csproj" />
     <ProjectReference Include="..\..\samples\RobotsTxt.Samples.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net7.0' ">
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="7.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="7.0.11" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0' ">
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="6.0.12" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="7.0.11" />
   </ItemGroup>
 </Project>
