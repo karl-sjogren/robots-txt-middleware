@@ -1,0 +1,219 @@
+name: 'Build and publish'
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+      - 'release/**'
+      - 'feature/**'
+      - 'hotfix/**'
+    paths-ignore:
+      - 'README.md'
+      - 'docs/*'
+      - 'scripts/*'
+      - '.vscode/*'
+
+permissions:
+  checks: write
+  contents: write
+  pull-requests: write
+  actions: read
+
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  DOTNET_NOLOGO: true
+  DOTNET_GENERATE_ASPNET_CERTIFICATE: false
+  NUGET_CERT_REVOCATION_MODE: offline
+  NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+
+jobs:
+
+  net-test:
+    name: .NET tests
+
+    strategy:
+      matrix:
+        os: [
+          ubuntu-latest,
+          windows-latest,
+          macos-latest
+        ]
+        netVersion: [
+          6.0.x,
+          7.0.x
+        ]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Checkout sources
+      uses: actions/checkout@v4
+
+    - name: Cache NuGet packages on Windows
+      uses: actions/cache@v3
+      if: matrix.os == 'windows-latest'
+      with:
+        path: ${{ github.workspace }}/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/*.Build.props') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
+    - name: Install .NET ${{ matrix.netVersion }}
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ matrix.netVersion }}
+        dotnet-quality: ga
+
+    - name: Restore NuGet packages
+      run: dotnet restore --verbosity minimal
+
+    - name: Run .NET tests
+      run: dotnet test --configuration Release
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v3
+      if: matrix.os == 'ubuntu-latest'
+      with:
+        name: net-test-results
+        path: |
+          ./**/*.trx
+          ./**/coverage.cobertura.xml
+
+  test-and-coverage-results:
+    name: Publish test and coverage results
+    runs-on: ubuntu-latest
+    needs: [ net-test ]
+
+    steps:
+    # While we don't use sources directly in this job the test reporter wants to check
+    # some files through git so we need the sources.
+    - name: Checkout sources
+      uses: actions/checkout@v4
+
+    - name: Download .NET tests results
+      uses: actions/download-artifact@v3
+      with:
+        name: net-test-results
+        path: ./
+
+    - name: Publish .NET tests
+      uses: dorny/test-reporter@v1
+      with:
+        name: 🧪 .NET test results
+        path: ./**/*.trx
+        reporter: dotnet-trx
+
+    - name: Create history folder
+      run: mkdir ./coverage-history
+      working-directory: ./
+
+    - name: Download historial coverage
+      uses: dawidd6/action-download-artifact@v2.27.0
+      with:
+        # Optional, GitHub token, a Personal Access Token with `public_repo` scope if needed
+        # Required, if the artifact is from a different repo
+        # Required, if the repo is private a Personal Access Token with `repo` scope is needed
+        # github_token: ${{secrets.GITHUB_TOKEN}}
+        workflow_conclusion: success
+        branch: ${{ github.head_ref }}
+        name: coverage-history
+        path: ./coverage-history
+        check_artifacts:  true
+        search_artifacts: true
+        if_no_artifact_found: ignore
+
+    - name: Install .NET 7
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 7.0.x
+        dotnet-quality: ga
+
+    - name: Generate coverage report
+      uses: danielpalme/ReportGenerator-GitHub-Action@5
+      with:
+        reports: '../**/{coverage.cobertura,cobertura-coverage}.xml'
+        targetdir: 'coverage-report'
+        historydir: 'coverage-history'
+        reporttypes: 'Html;MarkdownSummary;MarkdownDeltaSummary;Cobertura'
+        assemblyfilters: '-xunit*'
+        verbosity: 'Info'
+
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage-report
+        path: coverage-report
+
+    - name: Upload to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        file: coverage-report/Cobertura.xml
+
+    - name: Upload coverage history
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage-history
+        path: coverage-history
+
+    - name: Publish code coverage summary to run
+      uses: LouisBrunner/checks-action@v1.6.2
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        conclusion: ${{ job.status }}
+        name: 📝 Code coverage
+        output: "{\"summary\":\"Summary of code coverage. For more detailed information, download the full artifact from the run.\"}"
+        output_text_description_file: ./coverage-report/Summary.md
+
+  net-build:
+    name: .NET build
+    runs-on: ubuntu-latest
+    needs: [ net-test ]
+
+    steps:
+    - name: Checkout sources
+      uses: actions/checkout@v4
+
+    - name: Install .NET 7
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 7.0.x
+        dotnet-quality: ga
+
+    - name: Restore NuGet packages
+      run: dotnet restore --verbosity minimal
+
+    - name: Pack project
+      run: dotnet pack ./src/RobotsTxt/RobotsTxt.csproj --configuration Release --output artifacts
+
+    - name: Upload packages
+      uses: actions/upload-artifact@v3
+      with:
+        name: packages
+        path: artifacts/*.nupkg
+
+  publish:
+    name: NuGet Publish
+    needs: net-build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+    - name: Download artiifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: packages
+        path: ./artifacts/
+
+    - name: Install .NET 7
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 7.0.x
+        dotnet-quality: ga
+
+    - name: Publish package to NuGet.org
+      env:
+        NUGET_KEY: ${{ secrets.NUGET_KEY }}
+      run: dotnet nuget push artifacts/*.nupkg --api-key $NUGET_KEY --source https://api.nuget.org/v3/index.json
+      working-directory: ./

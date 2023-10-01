@@ -1,22 +1,19 @@
 {
-    "FormattingOptions": {
-      "newLine": "\n",
-      "useTabs": false,
-      "tabSize": 4,
-      "indentationSize": 4,
-      "enableEditorConfigSupport": true,
-      "OrganizeImports": true
-    },
-    "fileOptions": {
-      "systemExcludeSearchPatterns": [
-        "**/node_modules/**/*",
-        "**/bin/**/*",
-        "**/obj/**/*",
-        "**/node_modules/**/*"
-      ],
-      "excludeSearchPatterns": [
-        "**/Songbird.Frontend.csproj"
-      ]
-    }
+  "FormattingOptions": {
+    "newLine": "\n",
+    "enableEditorConfigSupport": true,
+    "OrganizeImports": true
+  },
+  "RoslynExtensionsOptions": {
+    "DocumentAnalysisTimeoutMs": 100000000
+  },
+  "fileOptions": {
+    "systemExcludeSearchPatterns": [
+      "**/node_modules/**/*",
+      "**/bin/**/*",
+      "**/obj/**/*"
+    ],
+    "excludeSearchPatterns": [
+    ]
   }
-  
+}

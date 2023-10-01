@@ -1,161 +1,158 @@
-using System;
 using System.Net;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
-using Xunit;
 
-namespace RobotsTxt.Tests {
-    public class MiddlewareTests {
-        [Fact]
-        public async Task RobotsTxtShouldRenderOnCorrectPathAsync() {
-            var server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
-            var client = server.CreateClient();
+namespace RobotsTxt.Tests;
 
-            var response = await client.GetAsync("/robots.txt");
-            response.EnsureSuccessStatusCode();
+public class MiddlewareTests {
+    [Fact]
+    public async Task RobotsTxtShouldRenderOnCorrectPathAsync() {
+        var server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
+        var client = server.CreateClient();
 
-            var result = await response.Content.ReadAsStringAsync();
+        var response = await client.GetAsync("/robots.txt");
+        response.EnsureSuccessStatusCode();
 
-            var expectedLines = new[] {
-                "# Allow Googlebot",
-                "User-agent: Googlebot",
-                "Allow: /",
-                "Request-rate: 1/10",
-                "",
-                "# Disallow the rest",
-                "User-agent: *",
-                "Crawl-delay: 10",
-                "Disallow: /",
-                "",
-                "Sitemap: https://example.com/sitemap.xml"
-            };
+        var result = await response.Content.ReadAsStringAsync();
 
-            var expected = string.Join(Environment.NewLine, expectedLines);
+        var expectedLines = new[] {
+            "# Allow Googlebot",
+            "User-agent: Googlebot",
+            "Allow: /",
+            "Request-rate: 1/10",
+            "",
+            "# Disallow the rest",
+            "User-agent: *",
+            "Crawl-delay: 10",
+            "Disallow: /",
+            "",
+            "Sitemap: https://example.com/sitemap.xml"
+        };
 
-            Assert.Equal(expected, result);
-        }
+        var expected = string.Join(Environment.NewLine, expectedLines);
 
-        [Fact]
-        public async Task RobotsTxtShouldRenderAllowAllCorrectlyAsync() {
-            var server = new TestServer(new WebHostBuilder().UseStartup<StartupAllowAll>());
-            var client = server.CreateClient();
-
-            var response = await client.GetAsync("/robots.txt");
-            response.EnsureSuccessStatusCode();
-
-            var result = await response.Content.ReadAsStringAsync();
-
-            var expectedLines = new[] {
-                "User-agent: *",
-                "Disallow:"
-            };
-
-            var expected = string.Join(Environment.NewLine, expectedLines);
-
-            Assert.Equal(expected, result);
-        }
-
-        [Fact]
-        public async Task RobotsTxtShouldRenderDenyAllCorrectlyAsync() {
-            var server = new TestServer(new WebHostBuilder().UseStartup<StartupDenyAll>());
-            var client = server.CreateClient();
-
-            var response = await client.GetAsync("/robots.txt");
-            response.EnsureSuccessStatusCode();
-
-            var result = await response.Content.ReadAsStringAsync();
-
-            var expectedLines = new[] {
-                "User-agent: *",
-                "Disallow: /"
-            };
-
-            var expected = string.Join(Environment.NewLine, expectedLines);
-
-            Assert.Equal(expected, result);
-        }
-
-        [Fact]
-        public async Task RobotsTxtShouldRenderACommentIfEmptyAsync() {
-            var server = new TestServer(new WebHostBuilder().UseStartup<StartupNoConfig>());
-            var client = server.CreateClient();
-
-            var response = await client.GetAsync("/robots.txt");
-            response.EnsureSuccessStatusCode();
-
-            var result = await response.Content.ReadAsStringAsync();
-            var expected = "# This file didn't get any instructions so everyone is allowed";
-
-            Assert.Equal(expected, result);
-        }
-
-        [Fact]
-        public async Task RobotsTxtShouldFallThroughOnInvalidPathAsync() {
-            var server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
-            var client = server.CreateClient();
-
-            var response = await client.GetAsync("/not-robots.txt");
-
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-        }
+        Assert.Equal(expected, result);
     }
 
-    public class Startup {
-        public void ConfigureServices(IServiceCollection services) {
-            services.AddStaticRobotsTxt(builder =>
-                builder
-                    .AddSection(section =>
-                        section
-                            .AddComment("Allow Googlebot")
-                            .AddUserAgent("Googlebot")
-                            .Allow("/")
-                            .AddCustomDirective("Request-rate", "1/10")
-                        )
-                    .AddSection(section =>
-                        section
-                            .AddComment("Disallow the rest")
-                            .AddUserAgent("*")
-                            .AddCrawlDelay(TimeSpan.FromSeconds(10))
-                            .Disallow("/")
-                        )
-                    .AddSitemap("https://example.com/sitemap.xml"));
-        }
+    [Fact]
+    public async Task RobotsTxtShouldRenderAllowAllCorrectlyAsync() {
+        var server = new TestServer(new WebHostBuilder().UseStartup<StartupAllowAll>());
+        var client = server.CreateClient();
 
-        public void Configure(IApplicationBuilder app) {
-            app.UseRobotsTxt();
-        }
+        var response = await client.GetAsync("/robots.txt");
+        response.EnsureSuccessStatusCode();
+
+        var result = await response.Content.ReadAsStringAsync();
+
+        var expectedLines = new[] {
+            "User-agent: *",
+            "Disallow:"
+        };
+
+        var expected = string.Join(Environment.NewLine, expectedLines);
+
+        Assert.Equal(expected, result);
     }
 
-    public class StartupAllowAll {
-        public void ConfigureServices(IServiceCollection services) {
-            services.AddStaticRobotsTxt(builder => builder.AllowAll());
-        }
+    [Fact]
+    public async Task RobotsTxtShouldRenderDenyAllCorrectlyAsync() {
+        var server = new TestServer(new WebHostBuilder().UseStartup<StartupDenyAll>());
+        var client = server.CreateClient();
 
-        public void Configure(IApplicationBuilder app) {
-            app.UseRobotsTxt();
-        }
+        var response = await client.GetAsync("/robots.txt");
+        response.EnsureSuccessStatusCode();
+
+        var result = await response.Content.ReadAsStringAsync();
+
+        var expectedLines = new[] {
+            "User-agent: *",
+            "Disallow: /"
+        };
+
+        var expected = string.Join(Environment.NewLine, expectedLines);
+
+        Assert.Equal(expected, result);
     }
 
-    public class StartupDenyAll {
-        public void ConfigureServices(IServiceCollection services) {
-            services.AddStaticRobotsTxt(builder => builder.DenyAll());
-        }
+    [Fact]
+    public async Task RobotsTxtShouldRenderACommentIfEmptyAsync() {
+        var server = new TestServer(new WebHostBuilder().UseStartup<StartupNoConfig>());
+        var client = server.CreateClient();
 
-        public void Configure(IApplicationBuilder app) {
-            app.UseRobotsTxt();
-        }
+        var response = await client.GetAsync("/robots.txt");
+        response.EnsureSuccessStatusCode();
+
+        var result = await response.Content.ReadAsStringAsync();
+        var expected = "# This file didn't get any instructions so everyone is allowed";
+
+        Assert.Equal(expected, result);
     }
 
-    public class StartupNoConfig {
-        public void ConfigureServices(IServiceCollection services) {
-            services.AddStaticRobotsTxt(builder => builder);
-        }
+    [Fact]
+    public async Task RobotsTxtShouldFallThroughOnInvalidPathAsync() {
+        var server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
+        var client = server.CreateClient();
 
-        public void Configure(IApplicationBuilder app) {
-            app.UseRobotsTxt();
-        }
+        var response = await client.GetAsync("/not-robots.txt");
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+}
+
+public class Startup {
+    public void ConfigureServices(IServiceCollection services) {
+        services.AddStaticRobotsTxt(builder =>
+            builder
+                .AddSection(section =>
+                    section
+                        .AddComment("Allow Googlebot")
+                        .AddUserAgent("Googlebot")
+                        .Allow("/")
+                        .AddCustomDirective("Request-rate", "1/10")
+                    )
+                .AddSection(section =>
+                    section
+                        .AddComment("Disallow the rest")
+                        .AddUserAgent("*")
+                        .AddCrawlDelay(TimeSpan.FromSeconds(10))
+                        .Disallow("/")
+                    )
+                .AddSitemap("https://example.com/sitemap.xml"));
+    }
+
+    public void Configure(IApplicationBuilder app) {
+        app.UseRobotsTxt();
+    }
+}
+
+public class StartupAllowAll {
+    public void ConfigureServices(IServiceCollection services) {
+        services.AddStaticRobotsTxt(builder => builder.AllowAll());
+    }
+
+    public void Configure(IApplicationBuilder app) {
+        app.UseRobotsTxt();
+    }
+}
+
+public class StartupDenyAll {
+    public void ConfigureServices(IServiceCollection services) {
+        services.AddStaticRobotsTxt(builder => builder.DenyAll());
+    }
+
+    public void Configure(IApplicationBuilder app) {
+        app.UseRobotsTxt();
+    }
+}
+
+public class StartupNoConfig {
+    public void ConfigureServices(IServiceCollection services) {
+        services.AddStaticRobotsTxt(builder => builder);
+    }
+
+    public void Configure(IApplicationBuilder app) {
+        app.UseRobotsTxt();
     }
 }

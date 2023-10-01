@@ -3,25 +3,25 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace RobotsTxt {
-    public class StaticRobotsTxtProvider : IRobotsTxtProvider {
-        private readonly Memory<byte> _content;
-        private readonly Int32 _maxAge;
+namespace RobotsTxt;
 
-        public StaticRobotsTxtProvider(RobotsTxtOptions options) {
-            var content = options.ToString();
+public class StaticRobotsTxtProvider : IRobotsTxtProvider {
+    private readonly Memory<byte> _content;
+    private readonly Int32 _maxAge;
 
-            if(string.IsNullOrWhiteSpace(content))
-                content = "# This file didn't get any instructions so everyone is allowed";
+    public StaticRobotsTxtProvider(RobotsTxtOptions options) {
+        var content = options.ToString();
 
-            _content = Encoding.UTF8.GetBytes(content).AsMemory();
+        if(string.IsNullOrWhiteSpace(content))
+            content = "# This file didn't get any instructions so everyone is allowed";
 
-            _maxAge = Convert.ToInt32(options.MaxAge.TotalSeconds);
-        }
+        _content = Encoding.UTF8.GetBytes(content).AsMemory();
 
-        public Task<RobotsTxtResult> GetResultAsync(CancellationToken cancellationToken) {
-            var result = new RobotsTxtResult(_content, _maxAge);
-            return Task.FromResult(result);
-        }
+        _maxAge = Convert.ToInt32(options.MaxAge.TotalSeconds);
+    }
+
+    public Task<RobotsTxtResult> GetResultAsync(CancellationToken cancellationToken) {
+        var result = new RobotsTxtResult(_content, _maxAge);
+        return Task.FromResult(result);
     }
 }

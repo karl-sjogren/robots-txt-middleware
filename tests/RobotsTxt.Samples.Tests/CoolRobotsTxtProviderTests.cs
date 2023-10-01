@@ -1,42 +1,38 @@
-using System;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
-using RobotsTxt.Samples;
-using Xunit;
 
-namespace RobotsTxt.Tests {
-    public class MiddlewareTests {
-        [Fact]
-        public async Task CoolRobotsTxtProviderShouldReturnAnAllowAllToTheMiddlewareAsync() {
-            var server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
-            var client = server.CreateClient();
+namespace RobotsTxt.Samples.Tests;
 
-            var response = await client.GetAsync("/robots.txt");
-            response.EnsureSuccessStatusCode();
+public class MiddlewareTests {
+    [Fact]
+    public async Task CoolRobotsTxtProviderShouldReturnAnAllowAllToTheMiddlewareAsync() {
+        var server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
+        var client = server.CreateClient();
 
-            var result = await response.Content.ReadAsStringAsync();
+        var response = await client.GetAsync("/robots.txt");
+        response.EnsureSuccessStatusCode();
 
-            var expectedLines = new[] {
-                "User-agent: *",
-                "Disallow:"
-            };
+        var result = await response.Content.ReadAsStringAsync();
 
-            var expected = string.Join(Environment.NewLine, expectedLines);
+        var expectedLines = new[] {
+            "User-agent: *",
+            "Disallow:"
+        };
 
-            Assert.Equal(expected, result);
-        }
+        var expected = string.Join(Environment.NewLine, expectedLines);
+
+        Assert.Equal(expected, result);
     }
-    public class Startup {
-        public void ConfigureServices(IServiceCollection services) {
-            services.AddScoped<CoolContext>();
-            services.AddScoped<IRobotsTxtProvider, CoolRobotsTxtProvider>();
-        }
+}
+public class Startup {
+    public void ConfigureServices(IServiceCollection services) {
+        services.AddScoped<CoolContext>();
+        services.AddScoped<IRobotsTxtProvider, CoolRobotsTxtProvider>();
+    }
 
-        public void Configure(IApplicationBuilder app) {
-            app.UseRobotsTxt();
-        }
+    public void Configure(IApplicationBuilder app) {
+        app.UseRobotsTxt();
     }
 }

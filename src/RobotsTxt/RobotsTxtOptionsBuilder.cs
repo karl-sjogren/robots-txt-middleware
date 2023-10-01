@@ -1,90 +1,90 @@
 using System;
 
-namespace RobotsTxt {
-    public class RobotsTxtOptionsBuilder {
-        private readonly RobotsTxtOptions _options;
+namespace RobotsTxt;
 
-        public RobotsTxtOptionsBuilder() {
-            _options = new RobotsTxtOptions();
+public class RobotsTxtOptionsBuilder {
+    private readonly RobotsTxtOptions _options;
+
+    public RobotsTxtOptionsBuilder() {
+        _options = new RobotsTxtOptions();
+    }
+
+    public RobotsTxtOptionsBuilder DenyAll() {
+        _options.Sections.Clear();
+        return AddSection(section =>
+            section
+                .AddUserAgent("*")
+                .Disallow("/")
+        );
+    }
+
+    public RobotsTxtOptionsBuilder AllowAll() {
+        _options.Sections.Clear();
+        return AddSection(section =>
+            section
+                .AddUserAgent("*")
+                .Disallow(string.Empty)
+        );
+    }
+
+    public RobotsTxtOptionsBuilder AddSection(Func<SectionBuilder, SectionBuilder> builder) {
+        var sectionBuilder = new SectionBuilder();
+        sectionBuilder = builder(sectionBuilder);
+        _options.Sections.Add(sectionBuilder.Section);
+        return this;
+    }
+
+    public RobotsTxtOptionsBuilder AddSitemap(string url) {
+        // Note: on Linux/macOS, "/path" URLs are treated as valid absolute file URLs.
+        // To ensure relative urls are correctly rejected on these platforms,
+        // an additional check using IsWellFormedOriginalString() is made here.
+        // See https://github.com/dotnet/corefx/issues/22098 for more information.
+        if(!Uri.TryCreate(url, UriKind.Absolute, out var uri) || !uri.IsWellFormedOriginalString())
+            throw new ArgumentException("Url must be an absolute url to the sitemap.", nameof(url));
+
+        _options.SitemapUrls.Add(url);
+        return this;
+    }
+
+    public RobotsTxtOptions Build() {
+        return _options;
+    }
+
+    public class SectionBuilder {
+        internal RobotsTxtSection Section { get; }
+
+        internal SectionBuilder() {
+            Section = new RobotsTxtSection();
         }
 
-        public RobotsTxtOptionsBuilder DenyAll() {
-            _options.Sections.Clear();
-            return AddSection(section =>
-                section
-                    .AddUserAgent("*")
-                    .Disallow("/")
-            );
-        }
-
-        public RobotsTxtOptionsBuilder AllowAll() {
-            _options.Sections.Clear();
-            return AddSection(section =>
-                section
-                    .AddUserAgent("*")
-                    .Disallow(string.Empty)
-            );
-        }
-
-        public RobotsTxtOptionsBuilder AddSection(Func<SectionBuilder, SectionBuilder> builder) {
-            var sectionBuilder = new SectionBuilder();
-            sectionBuilder = builder(sectionBuilder);
-            _options.Sections.Add(sectionBuilder.Section);
+        public SectionBuilder AddUserAgent(string userAgent) {
+            Section.UserAgents.Add(userAgent);
             return this;
         }
 
-        public RobotsTxtOptionsBuilder AddSitemap(string url) {
-            // Note: on Linux/macOS, "/path" URLs are treated as valid absolute file URLs.
-            // To ensure relative urls are correctly rejected on these platforms,
-            // an additional check using IsWellFormedOriginalString() is made here.
-            // See https://github.com/dotnet/corefx/issues/22098 for more information.
-            if(!Uri.TryCreate(url, UriKind.Absolute, out var uri) || !uri.IsWellFormedOriginalString())
-                throw new ArgumentException("Url must be an absolute url to the sitemap.", nameof(url));
-
-            _options.SitemapUrls.Add(url);
+        public SectionBuilder AddComment(string comment) {
+            Section.Comments.Add(comment);
             return this;
         }
 
-        public RobotsTxtOptions Build() {
-            return _options;
+        public SectionBuilder AddCrawlDelay(TimeSpan delay) {
+            Section.Rules.Add(new RobotsTxtCrawlDelayRule(delay));
+            return this;
         }
 
-        public class SectionBuilder {
-            internal RobotsTxtSection Section { get; }
+        public SectionBuilder AddCustomDirective(string directive, string value) {
+            Section.Rules.Add(new RobotsTxtCrawlCustomRule(directive, value));
+            return this;
+        }
 
-            internal SectionBuilder() {
-                Section = new RobotsTxtSection();
-            }
+        public SectionBuilder Allow(string path) {
+            Section.Rules.Add(new RobotsTxtAllowRule(path));
+            return this;
+        }
 
-            public SectionBuilder AddUserAgent(string userAgent) {
-                Section.UserAgents.Add(userAgent);
-                return this;
-            }
-
-            public SectionBuilder AddComment(string comment) {
-                Section.Comments.Add(comment);
-                return this;
-            }
-
-            public SectionBuilder AddCrawlDelay(TimeSpan delay) {
-                Section.Rules.Add(new RobotsTxtCrawlDelayRule(delay));
-                return this;
-            }
-
-            public SectionBuilder AddCustomDirective(string directive, string value) {
-                Section.Rules.Add(new RobotsTxtCrawlCustomRule(directive, value));
-                return this;
-            }
-
-            public SectionBuilder Allow(string path) {
-                Section.Rules.Add(new RobotsTxtAllowRule(path));
-                return this;
-            }
-
-            public SectionBuilder Disallow(string path) {
-                Section.Rules.Add(new RobotsTxtDisallowRule(path));
-                return this;
-            }
+        public SectionBuilder Disallow(string path) {
+            Section.Rules.Add(new RobotsTxtDisallowRule(path));
+            return this;
         }
     }
 }
