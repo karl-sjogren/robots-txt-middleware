@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <ParentDirectoryBuildPropsPath>$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)..\'))</ParentDirectoryBuildPropsPath>
-    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
 	<IsPublishable>false</IsPublishable>
 	<IsTestProject>true</IsTestProject>
     <ImplicitUsings>enable</ImplicitUsings>

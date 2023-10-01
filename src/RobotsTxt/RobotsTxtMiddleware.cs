@@ -16,7 +16,7 @@ public class RobotsTxtMiddleware {
             var result = await robotsTxtProvider.GetResultAsync(context.RequestAborted);
 
             context.Response.ContentType = "text/plain";
-            context.Response.Headers.Add("Cache-Control", $"max-age={result.MaxAge}");
+            context.Response.Headers["Cache-Control"] = $"max-age={result.MaxAge}";
 
             await context.Response.Body.WriteAsync(result.Content, context.RequestAborted);
 
