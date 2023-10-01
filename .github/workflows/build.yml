@@ -110,7 +110,7 @@ jobs:
       working-directory: ./
 
     - name: Download historial coverage
-      uses: dawidd6/action-download-artifact@v2.27.0
+      uses: dawidd6/action-download-artifact@v2.28.0
       with:
         # Optional, GitHub token, a Personal Access Token with `public_repo` scope if needed
         # Required, if the artifact is from a different repo
