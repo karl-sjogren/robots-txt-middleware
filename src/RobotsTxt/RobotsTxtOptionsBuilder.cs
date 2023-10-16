@@ -1,5 +1,3 @@
-using System;
-
 namespace RobotsTxt;
 
 public class RobotsTxtOptionsBuilder {
@@ -14,6 +12,11 @@ public class RobotsTxtOptionsBuilder {
             throw new ArgumentException("Environment must not be null or whitespace.", nameof(environment));
 
         _options.Environment = environment;
+        return this;
+    }
+
+    public RobotsTxtOptionsBuilder ForHostnames(params string[] hostnames) {
+        _options.Hostnames = hostnames.ToList();
         return this;
     }
 

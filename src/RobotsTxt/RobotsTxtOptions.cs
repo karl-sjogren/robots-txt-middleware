@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
@@ -9,9 +7,11 @@ public class RobotsTxtOptions {
     public RobotsTxtOptions() {
         Sections = new List<RobotsTxtSection>();
         SitemapUrls = new List<string>();
+        Hostnames = new List<string>();
     }
 
     public string Environment { get; internal set; }
+    public List<string> Hostnames { get; internal set; }
     public List<RobotsTxtSection> Sections { get; }
     public List<string> SitemapUrls { get; }
     public TimeSpan MaxAge { get; internal set; } = TimeSpan.FromDays(1);
