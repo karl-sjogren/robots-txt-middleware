@@ -68,7 +68,7 @@ jobs:
       run: dotnet test --configuration Release
 
     - name: Upload test results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: matrix.os == 'ubuntu-latest'
       with:
         name: net-test-results
@@ -135,7 +135,7 @@ jobs:
         verbosity: 'Info'
 
     - name: Upload coverage report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: coverage-report
         path: coverage-report
@@ -147,7 +147,7 @@ jobs:
         file: coverage-report/Cobertura.xml
 
     - name: Upload coverage history
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: coverage-history
         path: coverage-history
@@ -182,7 +182,7 @@ jobs:
       run: dotnet pack ./src/RobotsTxt/RobotsTxt.csproj --configuration Release --output artifacts
 
     - name: Upload packages
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: packages
         path: artifacts/*.nupkg
