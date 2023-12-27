@@ -8,9 +8,9 @@ namespace RobotsTxt.Tests;
 public class ServiceCollectionExtensionTests {
     [Fact]
     public void AddStaticRobotsTxt_WhenRegisteringWithoutHostname_RegistersProviderAsSingleton() {
-        var services = new ServiceCollection();
+        var services = new ServiceCollection().AddLogging();
 
-        services.AddStaticRobotsTxt(builder =>
+        services.AddRobotsTxt(builder =>
             builder
                 .DenyAll()
         );
@@ -23,20 +23,20 @@ public class ServiceCollectionExtensionTests {
 
     [Fact]
     public void AddStaticRobotsTxt_WhenRegisteringMultipleOptionsWithDifferentHostNameOptions_RegistersProviderAsScoped() {
-        var services = new ServiceCollection();
+        var services = new ServiceCollection().AddLogging();
 
-        services.AddStaticRobotsTxt(builder =>
+        services.AddRobotsTxt(builder =>
             builder
                 .DenyAll()
         );
 
-        services.AddStaticRobotsTxt(builder =>
+        services.AddRobotsTxt(builder =>
             builder
                 .ForHostnames("example.com")
                 .DenyAll()
         );
 
-        services.AddStaticRobotsTxt(builder =>
+        services.AddRobotsTxt(builder =>
             builder
                 .DenyAll()
         );
@@ -55,23 +55,23 @@ public class ServiceCollectionExtensionTests {
     [InlineData("squirrels-with-hats.com", "https://sample-website.com/sitemap.xml")]
 
     public async Task CreateRobotsTxtProviderForMultipleHosts_WhenCalledWithDifferentHostnames_ReturnsExpectedResultAsync(string hostname, string sitemapUrl) {
-        var services = new ServiceCollection();
+        var services = new ServiceCollection().AddLogging();
 
-        services.AddStaticRobotsTxt(builder =>
+        services.AddRobotsTxt(builder =>
             builder
                 .ForHostnames("example.com", "www.example.com", "example-com-test-site.com")
                 .AddSitemap("https://example.com/sitemap.xml")
                 .DenyAll()
         );
 
-        services.AddStaticRobotsTxt(builder =>
+        services.AddRobotsTxt(builder =>
             builder
                 .ForHostnames("cool-horses-with-glasses.com")
                 .AddSitemap("https://cool-horses-with-glasses.com/sitemap.xml")
                 .DenyAll()
         );
 
-        services.AddStaticRobotsTxt(builder =>
+        services.AddRobotsTxt(builder =>
             builder
                 .AddSitemap("https://sample-website.com/sitemap.xml")
                 .DenyAll()
