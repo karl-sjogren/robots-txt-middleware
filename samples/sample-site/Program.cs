@@ -5,7 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddStaticRobotsTxt(builder =>
+builder.Services.AddRobotsTxt(builder =>
     builder
         .ForEnvironment("Production")
         .AddSection(section =>
@@ -16,7 +16,7 @@ builder.Services.AddStaticRobotsTxt(builder =>
             )
 );
 
-builder.Services.AddStaticRobotsTxt(builder =>
+builder.Services.AddRobotsTxt(builder =>
     builder
         .DenyAll()
 );

@@ -130,7 +130,7 @@ file class TestHostEnvironment : IHostEnvironment {
 file class Startup {
     public void ConfigureServices(IServiceCollection services) {
         services.Replace(new ServiceDescriptor(typeof(IHostEnvironment), _ => new TestHostEnvironment(), ServiceLifetime.Singleton));
-        services.AddStaticRobotsTxt(builder =>
+        services.AddRobotsTxt(builder =>
             builder
                 .AddSection(section =>
                     section
@@ -157,7 +157,7 @@ file class Startup {
 file class StartupMultipleEnvironments {
     public void ConfigureServices(IServiceCollection services) {
         services.Replace(new ServiceDescriptor(typeof(IHostEnvironment), _ => new TestHostEnvironment(), ServiceLifetime.Singleton));
-        services.AddStaticRobotsTxt(builder =>
+        services.AddRobotsTxt(builder =>
             builder
                 .ForEnvironment("Development")
                 .AddSection(section =>
@@ -168,7 +168,7 @@ file class StartupMultipleEnvironments {
                     )
                 );
 
-        services.AddStaticRobotsTxt(builder =>
+        services.AddRobotsTxt(builder =>
             builder
                 .ForEnvironment("Production")
                 .AddSection(section =>
@@ -188,7 +188,7 @@ file class StartupMultipleEnvironments {
 file class StartupAllowAll {
     public void ConfigureServices(IServiceCollection services) {
         services.AddSingleton<IHostEnvironment, TestHostEnvironment>();
-        services.AddStaticRobotsTxt(builder => builder.AllowAll());
+        services.AddRobotsTxt(builder => builder.AllowAll());
     }
 
     public void Configure(IApplicationBuilder app) {
@@ -199,7 +199,7 @@ file class StartupAllowAll {
 file class StartupDenyAll {
     public void ConfigureServices(IServiceCollection services) {
         services.AddSingleton<IHostEnvironment, TestHostEnvironment>();
-        services.AddStaticRobotsTxt(builder => builder.DenyAll());
+        services.AddRobotsTxt(builder => builder.DenyAll());
     }
 
     public void Configure(IApplicationBuilder app) {
@@ -210,7 +210,7 @@ file class StartupDenyAll {
 file class StartupNoConfig {
     public void ConfigureServices(IServiceCollection services) {
         services.AddSingleton<IHostEnvironment, TestHostEnvironment>();
-        services.AddStaticRobotsTxt(builder => builder);
+        services.AddRobotsTxt(builder => builder);
     }
 
     public void Configure(IApplicationBuilder app) {

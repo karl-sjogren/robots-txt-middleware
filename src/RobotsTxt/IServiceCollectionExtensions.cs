@@ -1,12 +1,16 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Hosting;
 
 namespace RobotsTxt;
 
 public static class IServiceCollectionExtensions {
+    [Obsolete("Use AddRobotsTxt instead.", false)]
     public static void AddStaticRobotsTxt(this IServiceCollection services, Func<RobotsTxtOptionsBuilder, RobotsTxtOptionsBuilder> builderFunc) {
+        AddRobotsTxt(services, builderFunc);
+    }
+
+    public static void AddRobotsTxt(this IServiceCollection services, Func<RobotsTxtOptionsBuilder, RobotsTxtOptionsBuilder> builderFunc) {
         var builder = new RobotsTxtOptionsBuilder();
         var options = builderFunc(builder).Build();
 
@@ -50,7 +54,8 @@ public static class IServiceCollectionExtensions {
             }
         }
 
-        var hostEnvironemnt = services.GetRequiredService<IHostEnvironment>();
-        return new StaticRobotsTxtProvider(robotsOptions, hostEnvironemnt);
+        //var hostEnvironemnt = services.GetRequiredService<IHostEnvironment>();
+        return ActivatorUtilities.CreateInstance(services, typeof(StaticRobotsTxtProvider), robotsOptions) as IRobotsTxtProvider;
+        //return new StaticRobotsTxtProvider(robotsOptions, hostEnvironemnt);
     }
 }
